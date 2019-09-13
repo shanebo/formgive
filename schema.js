@@ -26,10 +26,10 @@ const getMetaProps = (obj) => Object.keys(obj).filter(prop => META_PROPS.include
 const getNonMetaProps = (obj) => Object.keys(obj).filter(prop => !META_PROPS.includes(prop));
 const SHORTHAND_PARAMS = ['*', ':', '!'];
 const PARAM_TABLE = {
-  '*': '_required',
-  '@': '_model',
-  ':': '_type',
-  '!': '_pattern'
+  '*': 'required',
+  '@': 'model',
+  ':': 'type',
+  '!': 'pattern'
   // ':': '_input',
   // '/': '_disabled'
   // '?': '_help'
@@ -39,22 +39,22 @@ const PARAM_TABLE = {
 
 
 const baseField = (prop) => ({
-    _label: prop,
-    _prop: camelCase(prop),
-    _placeholder: false,
-    _help: false,
-    _multiple: false,
-    _required: false,
-    _pattern: null,
-    _model: false,
-    _disabled: false,
-    _autocapitalize: false,
-    _autocomplete: false,
-    _autocorrect: false,
-    _spellcheck: false,
-    _xAutocompletetype: false,
-    _value: undefined,
-    _class: ''
+    label: prop,
+    prop: camelCase(prop),
+    placeholder: false,
+    help: false,
+    multiple: false,
+    required: false,
+    pattern: null,
+    model: false,
+    disabled: false,
+    // autocapitalize: false,
+    // autocomplete: false,
+    // autocorrect: false,
+    // spellcheck: false,
+    // xAutocompletetype: false,
+    value: undefined,
+    class: ''
   });
 
 
@@ -69,13 +69,13 @@ const expandShorthand = (str) => {
 
     if (paramType === '*') {
       return {
-        _required: true
+        required: true
       };
     } else if (paramType === '@') {
       return {
-        _input: 'select',
-        _type: 'relationship',
-        _model: param
+        input: 'select',
+        type: 'relationship',
+        model: param
       };
     } else if (!SHORTHAND_PARAMS.includes(paramType)) {
       return INPUT_TABLE[param];
@@ -92,8 +92,10 @@ const expandShorthand = (str) => {
 
 const toField = (prop, value) => {
   const type = typeOf(value);
+  // if (prop.startsWith('_')) prop = prop.substring(1);
 
   const field = (prop, value) => {
+
     if (type === 'string') {
       return expandShorthand(value);
 
@@ -104,16 +106,16 @@ const toField = (prop, value) => {
 
     } else if (type === 'object') {
       // if ((getMetaProps(value).length && !getNonMetaProps(value).length) || (!getMetaProps(value).length && getNonMetaProps(value).length) || prop === 'fieldset') {
-      console.log({ prop });
+      // console.log({ prop });
 
       // if (!getMetaProps(value).length) {
-      if (!getMetaProps(value).length || prop === '_fieldset') {
+      if (!getMetaProps(value).length || prop === 'fieldset') {
         value._type = 'fieldset';
       }
 
       if (value._type === 'fieldset') {
         value._children = toFields(value);
-        value._children.forEach(child => delete value[child._label]);
+        value._children.forEach(child => delete value[child.label]);
       }
 
       return value;
@@ -127,9 +129,27 @@ const toField = (prop, value) => {
 }
 
 
+const cleanupFunkNasty = (field) => {
+  const obj = {};
+  Object.keys(field).forEach(originalKey => {
+    const key = originalKey.startsWith('_')
+      ? originalKey.substring(1)
+      : originalKey;
+    const value = field[originalKey];
+    obj[key] = Array.isArray(value)
+      ? value.map(cleanupFunkNasty)
+      : value !== null && typeof value === 'object'
+        ? cleanupFunkNasty(value)
+        : value;
+  });
+  return obj;
+}
+
+
 const toFields = (schema) => {
   const fields = getNonMetaProps(schema).map((prop) => toField(prop, schema[prop]));
-  return addParamNames(fields);
+  const cleanedFields = fields.map(cleanupFunkNasty);
+  return addParamNames(cleanedFields);
 }
 
 
@@ -141,16 +161,16 @@ const toFields = (schema) => {
 const getParamName = (field, parent) => {
   // console.log({ parent });
   // console.log('\n\n');
-  // console.log({ _prop: field._prop });
-  // console.log({ _multiple: field._multiple });
+  // console.log({ prop: field.prop });
+  // console.log({ multiple: field.multiple });
 
-  return field._multiple
-    ? `${field._prop}[]`
-    : parent && parent._children && parent._prop !== '_fieldset'
-      ? `[${field._prop}]`
-      : field._prop === '_fieldset'
+  return field.multiple
+    ? `${field.prop}[]`
+    : parent && parent.children && parent.prop !== 'fieldset'
+      ? `[${field.prop}]`
+      : field.prop === 'fieldset'
         ? ''
-        : field._prop;
+        : field.prop;
 }
 
 
@@ -159,12 +179,12 @@ const getParamName = (field, parent) => {
 const addParamNames = (fields) => {
   const populate = (arr, parent = null, paramLayer = '') => {
     return arr.map(field => {
-      if (field._children) {
+      if (field.children) {
         // console.log('i have children');
         // console.log({ paramLayer });
-        field._children = populate(field._children, field, paramLayer + getParamName(field, parent));
+        field.children = populate(field.children, field, paramLayer + getParamName(field, parent));
       } else {
-        field._name = paramLayer + getParamName(field, parent);
+        field.name = paramLayer + getParamName(field, parent);
       }
       return field;
     });
@@ -175,7 +195,7 @@ const addParamNames = (fields) => {
 
 
 
-
+/*
 const mapFieldValues = (fields, doc) => {
   return fields.map(field => {
     const { _name, _children, _multiple } = field;
@@ -224,24 +244,74 @@ const mapFieldValues = (fields, doc) => {
     return field;
   });
 }
+*/
 
+
+exports.mapFieldValues = mapFieldValues = (fields, doc) => {
+  return fields.map(field => {
+    const { prop, children, multiple } = field;
+
+    const item = typeOf(doc) === 'object' ? doc[prop] : '';
+
+    if (children && multiple) {
+      // console.log({ item });
+      const len = item.length;
+      const values = [];
+      for (let index = 0; index < len; index++) {
+        const val = children.map(f => {
+          let obj = Object.assign({}, f);
+          obj.value = item[index][obj.prop]; // mapFieldValues()
+          return obj;
+        });
+        values.push(val);
+      }
+      field.values = values;
+
+    } else if (children && !multiple) {
+      // object
+      field.children = mapFieldValues(children, item);
+
+    } else if (multiple) {
+      // array
+      field.values = item.map(value => {
+        let obj = Object.assign({}, field);
+        obj.multiple = false;
+        // obj.isChild = true;
+        obj.label = '';
+        obj.value = value;
+        return obj;
+      });
+
+      // console.log('IN multiple');
+      // console.log('\n\n\n');
+      // console.log('field.values');
+      // console.log(field.values);
+
+    } else {
+      // string
+      field.value = item;
+    }
+
+    return field;
+  });
+}
 
 
 
 
 const toBase = (type, fields) => {
   const base = {
-    _type: type
+    type: type
   };
 
   const walk = (arr, obj) => {
     return arr.forEach(field => {
-      if (field._children) {
-        obj[field._prop] = {};
-        const layer = obj[field._prop];
-        field._children = walk(field._children, layer);
+      if (field.children) {
+        obj[field.prop] = {};
+        const layer = obj[field.prop];
+        field.children = walk(field.children, layer);
       } else {
-        obj[field._prop] = field._pattern;
+        obj[field.prop] = field.pattern;
       }
     });
   }
