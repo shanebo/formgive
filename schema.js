@@ -19,9 +19,10 @@ const META_PROPS = [
   '_autocorrect',
   '_spellcheck',
   '_xAutocompletetype',
-  '_class'
+  '_css'
 ];
 
+const isMetaProp = (prop) => META_PROPS.includes(prop);
 const getMetaProps = (obj) => Object.keys(obj).filter(prop => META_PROPS.includes(prop));
 const getNonMetaProps = (obj) => Object.keys(obj).filter(prop => !META_PROPS.includes(prop));
 const SHORTHAND_PARAMS = ['*', ':', '!'];
@@ -39,22 +40,17 @@ const PARAM_TABLE = {
 
 
 const baseField = (prop) => ({
-    label: prop,
-    prop: camelCase(prop),
-    placeholder: false,
-    help: false,
-    multiple: false,
-    required: false,
-    pattern: null,
-    model: false,
-    disabled: false,
-    // autocapitalize: false,
-    // autocomplete: false,
-    // autocorrect: false,
-    // spellcheck: false,
-    // xAutocompletetype: false,
-    value: undefined,
-    class: ''
+    _label: camelCase(prop),
+    _prop: prop,
+    _placeholder: false,
+    _help: false,
+    _multiple: false,
+    _required: false,
+    _pattern: null,
+    _model: false,
+    _disabled: false,
+    _value: undefined,
+    _css: ''
   });
 
 
@@ -90,43 +86,45 @@ const expandShorthand = (str) => {
 }
 
 
-const toField = (prop, value) => {
+
+const createField = (prop, value) => {
   const type = typeOf(value);
-  // if (prop.startsWith('_')) prop = prop.substring(1);
 
-  const field = (prop, value) => {
+  if (type === 'string') {
+    return expandShorthand(value);
 
-    if (type === 'string') {
-      return expandShorthand(value);
+  } else if (type === 'array') {
+    const field = toField(prop, value[0]);
+    field._multiple = true;
+    return field;
 
-    } else if (type === 'array') {
-      const field = toField(prop, value[0]);
-      field._multiple = true;
-      return field;
-
-    } else if (type === 'object') {
-      // if ((getMetaProps(value).length && !getNonMetaProps(value).length) || (!getMetaProps(value).length && getNonMetaProps(value).length) || prop === 'fieldset') {
-      // console.log({ prop });
-
-      // if (!getMetaProps(value).length) {
-      if (!getMetaProps(value).length || prop === 'fieldset') {
-        value._type = 'fieldset';
-      }
-
-      if (value._type === 'fieldset') {
-        value._children = toFields(value);
-        value._children.forEach(child => delete value[child.label]);
-      }
-
-      return value;
+  } else if (type === 'object') {
+    if (!getMetaProps(value).length || prop === 'fieldset') {
+      value._type = 'fieldset';
     }
-  }
 
+    if (value._type === 'fieldset') {
+      value._children = makeFieldsBaby(value);
+      value._children.forEach(child => delete value[child._label]);
+    }
+
+    if (INPUT_TABLE[value._input]) {
+      return Object.assign({}, INPUT_TABLE[value._input], value);
+    }
+
+    return value;
+  }
+}
+
+
+const toField = (prop, value) => {
   return {
     ...baseField(prop),
-    ...field(prop, value)
+    ...createField(prop, value)
   };
 }
+
+
 
 
 const cleanupFunkNasty = (field) => {
@@ -146,11 +144,23 @@ const cleanupFunkNasty = (field) => {
 }
 
 
+const makeFieldsBaby = (schema) => {
+  return getNonMetaProps(schema).map((prop) => toField(prop, schema[prop]));
+}
+
+
 const toFields = (schema) => {
-  const fields = getNonMetaProps(schema).map((prop) => toField(prop, schema[prop]));
+  const fields = makeFieldsBaby(schema);
   const cleanedFields = fields.map(cleanupFunkNasty);
   return addParamNames(cleanedFields);
 }
+
+
+// const toFields = (schema) => {
+//   const fields = getNonMetaProps(schema).map((prop) => toField(prop, schema[prop]));
+//   const cleanedFields = fields.map(cleanupFunkNasty);
+//   return addParamNames(cleanedFields);
+// }
 
 
 
@@ -193,58 +203,6 @@ const addParamNames = (fields) => {
   return populate(fields);
 }
 
-
-
-/*
-const mapFieldValues = (fields, doc) => {
-  return fields.map(field => {
-    const { _name, _children, _multiple } = field;
-
-    const item = typeOf(doc) === 'object' ? doc[_name] : '';
-
-    if (_children && _multiple) {
-      // console.log({ item });
-      const len = item.length;
-      const values = [];
-      for (let index = 0; index < len; index++) {
-        const val = _children.map(f => {
-          let obj = Object.assign({}, f);
-          obj._value = item[index][obj._name]; // mapFieldValues()
-          return obj;
-        });
-        values.push(val);
-      }
-      field._values = values;
-
-    } else if (_children && !_multiple) {
-      // object
-      field._children = mapFieldValues(_children, item);
-
-    } else if (_multiple) {
-      // array
-      field._values = item.map(value => {
-        let obj = Object.assign({}, field);
-        obj._multiple = false;
-        // obj._isChild = true;
-        obj._label = '';
-        obj._value = value;
-        return obj;
-      });
-
-      // console.log('IN _multiple');
-      // console.log('\n\n\n');
-      // console.log('field._values');
-      // console.log(field._values);
-
-    } else {
-      // string
-      field._value = item;
-    }
-
-    return field;
-  });
-}
-*/
 
 
 exports.mapFieldValues = mapFieldValues = (fields, doc) => {

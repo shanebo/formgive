@@ -1,76 +1,76 @@
 // also account for autocorrect, autocomplete, spellcheck, attributes etc.
 const INPUT_TABLE = module.exports = {
   name: {
-    input: 'name',
-    type: 'text',
-    autocapitalize: 'on',
-    autocomplete: 'name',
-    autocorrect: 'off',
-    spellcheck: 'off',
-    xAutocompletetype: 'nume-full'
+    _input: 'name',
+    _type: 'text',
+    _autocapitalize: 'on',
+    _autocomplete: 'name',
+    _autocorrect: 'off',
+    _spellcheck: 'off',
+    _xAutocompletetype: 'nume-full'
   },
 
   text: {
-    input: 'text',
-    type: 'text',
-    autocapitalize: false,
-    autocomplete: false,
-    autocorrect: false,
-    spellcheck: false,
-    xAutocompletetype: false
+    _input: 'text',
+    _type: 'text',
+    _autocapitalize: false,
+    _autocomplete: false,
+    _autocorrect: false,
+    _spellcheck: false,
+    _xAutocompletetype: false
   },
 
   email: {
-    input: 'email',
-    type: 'text',
-    autocapitalize: 'off',
-    autocomplete: 'email',
-    autocorrect: 'off',
-    spellcheck: 'off',
-    xAutocompletetype: 'email'
+    _input: 'email',
+    _type: 'text',
+    _autocapitalize: 'off',
+    _autocomplete: 'email',
+    _autocorrect: 'off',
+    _spellcheck: 'off',
+    _xAutocompletetype: 'email'
     // pattern: 'email validator',
     // placeholder: 'email@website.com',
   },
 
-  'url': {
-    'input': 'url',
-    'type': 'text',
-    'pattern': 'https://.*'
+  url: {
+    _input: 'url',
+    _type: 'text',
+    _pattern: 'https://.*'
   },
 
-  'number': {
-    'input': 'number',
-    'type': 'number',
-    'pattern': '[0-9]*'
+  number: {
+    _input: 'number',
+    _type: 'number',
+    _pattern: '[0-9]*'
   },
 
-  'checkbox': {
-    'input': 'checkbox',
-    'type': 'boolean',
-    'value': false
+  checkbox: {
+    _input: 'checkbox',
+    _type: 'boolean',
+    _value: false
   },
 
-  'markdown': {
-    'input': 'markdown',
-    'type': 'text',
-    'pattern': 'markdown validator',
-    'placeholder': 'Enter markdown'
+  markdown: {
+    _input: 'markdown',
+    _type: 'text',
+    _pattern: 'markdown validator',
+    _placeholder: 'Enter markdown'
   },
 
   select: {
-    input: 'select',
-    type: 'text'
+    _input: 'select',
+    _type: 'text'
   },
 
-  'switch': {
-    'input': 'switch',
-    'type': 'boolean',
-    'value': false
+  switch: {
+    _input: 'switch',
+    _type: 'boolean',
+    _value: false
   },
 
-  'radio': {
-    'input': 'radio',
-    'type': 'text'
+  radio: {
+    _input: 'radio',
+    _type: 'text'
   }
 
   // 'currency': {

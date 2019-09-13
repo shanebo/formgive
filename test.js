@@ -41,7 +41,7 @@ describe('Schema Parser', () => {
         spellcheck: false,
         xAutocompletetype: false,
         value: undefined,
-        class: '',
+        css: '',
         input: 'text',
         type: 'text',
         name: 'name'
@@ -71,7 +71,7 @@ describe('Schema Parser', () => {
         spellcheck: 'off',
         xAutocompletetype: 'email',
         value: undefined,
-        class: '',
+        css: '',
         input: 'email',
         type: 'text',
         name: 'email'
@@ -96,7 +96,7 @@ describe('Schema Parser', () => {
         model: 'Author',
         disabled: false,
         value: undefined,
-        class: '',
+        css: '',
         input: 'select',
         type: 'relationship',
         name: 'author'
@@ -122,7 +122,7 @@ describe('Schema Parser', () => {
         model: false,
         disabled: false,
         value: undefined,
-        class: '',
+        css: '',
         input: 'url',
         type: 'text',
         name: 'price'
@@ -147,7 +147,7 @@ describe('Schema Parser', () => {
         model: 'Tag',
         disabled: false,
         value: undefined,
-        class: '',
+        css: '',
         input: 'select',
         type: 'relationship',
         name: 'tags[]'
@@ -172,7 +172,7 @@ describe('Schema Parser', () => {
         model: false,
         disabled: false,
         value: false,
-        class: '',
+        css: '',
         input: 'checkbox',
         type: 'boolean',
         name: 'member'
@@ -183,6 +183,31 @@ describe('Schema Parser', () => {
   });
 
   describe('Longhand', () => {
+
+    // it('radio', () => {
+    //   const actual = toFields({
+    //     hasDonation: {
+    //       '_prop': 'hasDonation',
+    //       '_label': 'Donor',
+    //       '_input': 'radio',
+    //       '_options': [
+    //         {
+    //           'label': 'True',
+    //           'value': true
+    //         },
+    //         {
+    //           'label': 'False',
+    //           'value': false
+    //         }
+    //       ]
+    //     }
+    //   });
+
+    //   const expected = [{}];
+
+    //   expectToEqual(actual, expected);
+    // });
+
 
     it('simple text field', () => {
       const actual = toFields({
@@ -205,9 +230,14 @@ describe('Schema Parser', () => {
         model: false,
         disabled: false,
         value: undefined,
-        class: '',
+        css: '',
         type: 'text',
         input: 'text',
+        autocapitalize: false,
+        autocomplete: false,
+        autocorrect: false,
+        spellcheck: false,
+        xAutocompletetype: false,
         name: 'name'
       }];
 
@@ -227,7 +257,7 @@ describe('Schema Parser', () => {
       });
 
       const expected = [{
-        class: '',
+        css: '',
         disabled: false,
         value: undefined,
         placeholder: false,
@@ -240,7 +270,7 @@ describe('Schema Parser', () => {
         prop: 'theme',
         type: 'fieldset',
         children: [{
-          class: '',
+          css: '',
           disabled: false,
           value: undefined,
           placeholder: false,
@@ -275,7 +305,7 @@ describe('Schema Parser', () => {
       });
 
       const expected = [{
-        class: '',
+        css: '',
         disabled: false,
         value: undefined,
         placeholder: false,
@@ -288,7 +318,7 @@ describe('Schema Parser', () => {
         type: 'fieldset',
         prop: 'theme',
         children: [{
-          class: '',
+          css: '',
           disabled: false,
           value: undefined,
           placeholder: false,
@@ -333,7 +363,7 @@ describe('Schema Parser', () => {
       });
 
       const expected = [{
-        class: '',
+        css: '',
         disabled: false,
         value: undefined,
         placeholder: false,
@@ -371,11 +401,11 @@ describe('Schema Parser', () => {
   describe('Mixed', () => {
     it('multiple via relationship', () => {
       const actual = toFields({
-        'tags': [{
-          '_label': 'tags',
-          '_input': 'select',
-          '_type': 'relationship',
-          '_model': 'Tag'
+        tags: [{
+          _label: 'tags',
+          _input: 'select',
+          _type: 'relationship',
+          _model: 'Tag'
         }]
       });
 
@@ -390,7 +420,7 @@ describe('Schema Parser', () => {
         model: 'Tag',
         disabled: false,
         value: undefined,
-        class: '',
+        css: '',
         input: 'select',
         type: 'relationship',
         name: 'tags[]'
@@ -419,7 +449,7 @@ describe('Schema Parser', () => {
             prop: 'user',
             pattern: null,
             placeholder: false,
-            class: '',
+            css: '',
             name: 'comments[][user]',
             required: false,
             disabled: false,
@@ -438,7 +468,7 @@ describe('Schema Parser', () => {
             model: false,
             multiple: false,
             prop: 'date',
-            class: '',
+            css: '',
             pattern: null,
             placeholder: false,
             name: 'comments[][date]',
@@ -459,7 +489,7 @@ describe('Schema Parser', () => {
             model: false,
             multiple: false,
             disabled: false,
-            class: '',
+            css: '',
             value: undefined,
             prop: 'comment',
             pattern: 'markdown validator',
@@ -475,7 +505,7 @@ describe('Schema Parser', () => {
         multiple: true,
         prop: 'comments',
         disabled: false,
-        class: '',
+        css: '',
         value: undefined,
         pattern: null,
         placeholder: false,
@@ -500,13 +530,13 @@ describe('Schema Parser', () => {
   const model = {
       id: 'Person',
       fields: toFields({
-        'title': 'text',
-        'body': 'markdown',
-        'comments': [
+        title: 'text',
+        body: 'markdown',
+        comments: [
           {
-            'user': 'text',
-            'date': 'text',
-            'comment': 'markdown'
+            user: 'text',
+            date: 'text',
+            comment: 'markdown'
           }
         ]
       })
