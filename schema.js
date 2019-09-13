@@ -1,4 +1,4 @@
-const { typeOf, camelCase } = require('./utils');
+const { typeOf, humanize } = require('./utils');
 const INPUT_TABLE = require('./inputs');
 
 const META_PROPS = [
@@ -40,7 +40,7 @@ const PARAM_TABLE = {
 
 
 const baseField = (prop) => ({
-    _label: camelCase(prop),
+    _label: humanize(prop),
     _prop: prop,
     _placeholder: false,
     _help: false,
@@ -105,7 +105,7 @@ const createField = (prop, value) => {
 
     if (value._type === 'fieldset') {
       value._children = makeFieldsBaby(value);
-      value._children.forEach(child => delete value[child._label]);
+      value._children.forEach(child => delete value[child._prop]);
     }
 
     if (INPUT_TABLE[value._input]) {

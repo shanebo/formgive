@@ -26,7 +26,7 @@ describe('Schema Parser', () => {
       });
 
       const expected = [{
-        label: 'name',
+        label: 'Name',
         prop: 'name',
         placeholder: false,
         help: false,
@@ -56,7 +56,7 @@ describe('Schema Parser', () => {
       });
 
       const expected = [{
-        label: 'email',
+        label: 'Email',
         prop: 'email',
         placeholder: false,
         help: false,
@@ -86,7 +86,7 @@ describe('Schema Parser', () => {
       });
 
       const expected = [{
-        label: 'author',
+        label: 'Author',
         prop: 'author',
         placeholder: false,
         help: false,
@@ -112,7 +112,7 @@ describe('Schema Parser', () => {
       });
 
       const expected = [{
-        label: 'price',
+        label: 'Price',
         prop: 'price',
         placeholder: false,
         help: false,
@@ -137,7 +137,7 @@ describe('Schema Parser', () => {
       });
 
       const expected = [{
-        label: 'tags',
+        label: 'Tags',
         prop: 'tags',
         placeholder: false,
         help: false,
@@ -162,7 +162,7 @@ describe('Schema Parser', () => {
       });
 
       const expected = [{
-        label: 'member',
+        label: 'Member',
         prop: 'member',
         placeholder: false,
         help: false,
@@ -212,7 +212,7 @@ describe('Schema Parser', () => {
     it('simple text field', () => {
       const actual = toFields({
         name: {
-          _label: 'name',
+          _label: 'Name',
           _type: 'text',
           _required: true,
           _input: 'text'
@@ -220,7 +220,7 @@ describe('Schema Parser', () => {
       });
 
       const expected = [{
-        label: 'name',
+        label: 'Name',
         prop: 'name',
         placeholder: false,
         help: false,
@@ -249,7 +249,7 @@ describe('Schema Parser', () => {
       const actual = toFields({
         theme: {
           color: {
-            _label: 'color',
+            _label: 'Color',
             _type: 'text',
             _input: 'color'
           }
@@ -266,7 +266,7 @@ describe('Schema Parser', () => {
         required: false,
         pattern: null,
         model: false,
-        label: 'theme',
+        label: 'Theme',
         prop: 'theme',
         type: 'fieldset',
         children: [{
@@ -279,7 +279,7 @@ describe('Schema Parser', () => {
           required: false,
           pattern: null,
           model: false,
-          label: 'color',
+          label: 'Color',
           type: 'text',
           input: 'color',
           name: 'theme[color]',
@@ -294,10 +294,10 @@ describe('Schema Parser', () => {
     it('fieldset with metas', () => {
       const actual = toFields({
         theme: {
-          _label: 'theme',
+          _label: 'Theme',
           _type: 'fieldset',
           color: {
-            _label: 'color',
+            _label: 'Color',
             _type: 'text',
             _input: 'color'
           }
@@ -314,7 +314,7 @@ describe('Schema Parser', () => {
         required: false,
         pattern: null,
         model: false,
-        label: 'theme',
+        label: 'Theme',
         type: 'fieldset',
         prop: 'theme',
         children: [{
@@ -327,7 +327,7 @@ describe('Schema Parser', () => {
           required: false,
           pattern: null,
           model: false,
-          label: 'color',
+          label: 'Color',
           type: 'text',
           input: 'color',
           name: 'theme[color]',
@@ -342,7 +342,7 @@ describe('Schema Parser', () => {
     it('select with options', () => {
       const actual = toFields({
         title: {
-          _label: 'title',
+          _label: 'Title',
           _input: 'select',
           _type: 'number',
           _options: [
@@ -372,7 +372,7 @@ describe('Schema Parser', () => {
         required: false,
         pattern: null,
         model: false,
-        label: 'title',
+        label: 'Title',
         name: 'title',
         input: 'select',
         type: 'number',
@@ -402,7 +402,7 @@ describe('Schema Parser', () => {
     it('multiple via relationship', () => {
       const actual = toFields({
         tags: [{
-          _label: 'tags',
+          _label: 'Tags',
           _input: 'select',
           _type: 'relationship',
           _model: 'Tag'
@@ -410,7 +410,7 @@ describe('Schema Parser', () => {
       });
 
       const expected = [{
-        label: 'tags',
+        label: 'Tags',
         prop: 'tags',
         placeholder: false,
         help: false,
@@ -443,7 +443,7 @@ describe('Schema Parser', () => {
           {
             help: false,
             input: 'text',
-            label: 'user',
+            label: 'User',
             model: false,
             multiple: false,
             prop: 'user',
@@ -464,7 +464,7 @@ describe('Schema Parser', () => {
           {
             help: false,
             input: 'text',
-            label: 'date',
+            label: 'Date',
             model: false,
             multiple: false,
             prop: 'date',
@@ -485,7 +485,7 @@ describe('Schema Parser', () => {
           {
             help: false,
             input: 'markdown',
-            label: 'comment',
+            label: 'Comment',
             model: false,
             multiple: false,
             disabled: false,
@@ -500,7 +500,7 @@ describe('Schema Parser', () => {
           }
         ],
         help: false,
-        label: 'comments',
+        label: 'Comments',
         model: false,
         multiple: true,
         prop: 'comments',
