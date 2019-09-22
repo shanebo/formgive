@@ -20,6 +20,16 @@ const INPUT_TABLE = module.exports = {
     _xAutocompletetype: false
   },
 
+  date: {
+    _input: 'date',
+    _type: 'text',
+    _autocapitalize: false,
+    _autocomplete: false,
+    _autocorrect: false,
+    _spellcheck: false,
+    _xAutocompletetype: false
+  },
+
   email: {
     _input: 'email',
     _type: 'text',
@@ -50,6 +60,21 @@ const INPUT_TABLE = module.exports = {
     _value: false
   },
 
+  textarea: {
+    _input: 'textarea',
+    _type: 'text'
+  },
+
+  currency: {
+    _input: 'currency',
+    _type: 'number',
+    _autocapitalize: false,
+    _autocomplete: false,
+    _autocorrect: false,
+    _spellcheck: false,
+    _xAutocompletetype: false
+  },
+
   markdown: {
     _input: 'markdown',
     _type: 'text',
@@ -65,11 +90,17 @@ const INPUT_TABLE = module.exports = {
   switch: {
     _input: 'switch',
     _type: 'boolean',
+    _checked: false,
     _value: false
   },
 
   radio: {
     _input: 'radio',
+    _type: 'text'
+  },
+
+  radiogroup: {
+    _input: 'radiogroup',
     _type: 'text'
   }
 

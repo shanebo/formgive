@@ -11,6 +11,7 @@ const META_PROPS = [
   '_required',
   '_multiple',
   '_value',
+  '_checked',
   '_pattern',
   '_model',
   '_disabled',
