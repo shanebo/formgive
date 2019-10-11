@@ -1,3 +1,5 @@
+const dayjs = require('dayjs');
+
 // also account for autocorrect, autocomplete, spellcheck, attributes etc.
 const INPUT_TABLE = module.exports = {
   name: {
@@ -27,7 +29,11 @@ const INPUT_TABLE = module.exports = {
     _autocomplete: false,
     _autocorrect: false,
     _spellcheck: false,
-    _xAutocompletetype: false
+    _xAutocompletetype: false,
+    _pattern: /./,
+    _format: (d) => dayjs(d).format('MM/DD/YYYY') // allow a default date format at the global level
+
+    // _formatter: (val) => formatDate(val)
   },
 
   email: {
@@ -102,6 +108,12 @@ const INPUT_TABLE = module.exports = {
   radiogroup: {
     _input: 'radiogroup',
     _type: 'text'
+  },
+
+  fieldset: {
+    _input: 'fieldset'
+    // ,
+    // _legend: undefined
   }
 
   // 'currency': {

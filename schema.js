@@ -13,6 +13,7 @@ const META_PROPS = [
   '_value',
   '_checked',
   '_pattern',
+  '_format',
   '_model',
   '_disabled',
   '_autocapitalize',
@@ -20,6 +21,7 @@ const META_PROPS = [
   '_autocorrect',
   '_spellcheck',
   '_xAutocompletetype',
+  '_legend',
   '_css'
 ];
 
@@ -50,6 +52,7 @@ const baseField = (prop) => ({
     _pattern: null,
     _model: false,
     _disabled: false,
+    _format: undefined,
     _value: undefined,
     _css: ''
   });
@@ -101,10 +104,10 @@ const createField = (prop, value) => {
 
   } else if (type === 'object') {
     if (!getMetaProps(value).length || prop === 'fieldset') {
-      value._type = 'fieldset';
+      value._input = 'fieldset';
     }
 
-    if (value._type === 'fieldset') {
+    if (value._input === 'fieldset') {
       value._children = makeFieldsBaby(value);
       value._children.forEach(child => delete value[child._prop]);
     }
@@ -170,6 +173,21 @@ const toFields = (schema) => {
 
 
 const getParamName = (field, parent) => {
+  // console.log({ parent });
+  // console.log('\n\n');
+  // console.log({ prop: field.prop });
+  // console.log({ multiple: field.multiple });
+
+  return field.multiple
+    ? field.prop
+    : parent && parent.children && parent.prop !== 'fieldset'
+      ? `.${field.prop}`
+      : field.prop === 'fieldset'
+        ? ''
+        : field.prop;
+}
+
+const getOldSchoolParamName = (field, parent) => {
   // console.log({ parent });
   // console.log('\n\n');
   // console.log({ prop: field.prop });
