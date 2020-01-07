@@ -1,4 +1,5 @@
 const dayjs = require('dayjs');
+const { toCurrency } = require('./utils');
 
 // also account for autocorrect, autocomplete, spellcheck, attributes etc.
 const INPUT_TABLE = module.exports = {
@@ -78,6 +79,7 @@ const INPUT_TABLE = module.exports = {
     _autocomplete: false,
     _autocorrect: false,
     _spellcheck: false,
+    _format: toCurrency,
     _xAutocompletetype: false
   },
 
