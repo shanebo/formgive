@@ -13,6 +13,7 @@ const META_PROPS = [
   '_value',
   '_checked',
   '_pattern',
+  '_phrase',
   '_format',
   '_model',
   '_disabled',
@@ -53,6 +54,7 @@ const baseField = (prop) => ({
     _model: false,
     _disabled: false,
     _format: undefined,
+    _phrase: undefined,
     _value: undefined,
     _css: ''
   });
@@ -224,7 +226,7 @@ const addParamNames = (fields) => {
 
 
 
-exports.mapFieldValues = mapFieldValues = (fields, doc) => {
+const mapFieldValues = (fields, doc) => {
   return fields.map(field => {
     const { prop, children, multiple } = field;
 
@@ -298,6 +300,38 @@ const toBase = (type, fields) => {
 }
 
 
+
+const isValue = (val) => ![undefined, null, ''].includes(val);
+
+const toSentence = (fields) => {
+  const sentence = fields.map(field => {
+    const { value, phrase, format, children } = field;
+
+    if (children) return toSentence(children);
+
+    if (isValue(value)) {
+      if (phrase) {
+        if (format) {
+          return phrase(format(value, field), field);
+        } else {
+          return phrase(value, field);
+        }
+      } else if (format) {
+        return format(value, field);
+      } else {
+        return value;
+      }
+    } else {
+      return value;
+    }
+  }).filter(phrase => phrase);
+
+  return sentence.join(' ');
+}
+
+
+
+exports.toSentence = toSentence;
 
 exports.toBase = toBase;
 exports.toField = toField;

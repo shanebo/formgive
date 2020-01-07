@@ -5,7 +5,7 @@ const {
   expect
 } = require('chai');
 
-const { toFields, mapFieldValues } = require('./schema');
+const { toFields, mapFieldValues, toSentence } = require('./schema');
 
 // const { toBase, toValidDoc } = require('../app/subapps/hub/validator');
 // const { arrayToObject } = require('../app/helpers');
@@ -17,6 +17,148 @@ const expectToEqual = (actual, expected) => {
   expect(actual).to.deep.equal(expected);
 }
 
+describe('To sentence', () => {
+  it.only('Sentence of values with currency', () => {
+    const fields = toFields({
+      amount: {
+        min: 'currency',
+        max: 'currency'
+      }
+    });
+
+    const fieldsWithValues = mapFieldValues(fields, {
+      amount: {
+        min: 30,
+        max: 1000
+      }
+    });
+
+    const actual = toSentence(fieldsWithValues);
+    const expected = 'joe osburn joe@jnodev.com';
+
+    expectToEqual(actual, expected);
+  });
+
+  it('Sentence of values', () => {
+    const fields = toFields({
+      name: 'name',
+      email: 'email'
+    });
+
+    const fieldsWithValues = mapFieldValues(fields, {
+      name: 'joe osburn',
+      email: 'joe@jnodev.com'
+    });
+
+    const actual = toSentence(fieldsWithValues);
+    const expected = 'joe osburn joe@jnodev.com';
+
+    expectToEqual(actual, expected);
+  });
+
+  it('Sentence of values with some phrases', () => {
+    const fields = toFields({
+      name: {
+        _input: 'name',
+        _phrase: (val, field) => `My name is ${val}`
+      },
+      email: 'email'
+    });
+
+    const fieldsWithValues = mapFieldValues(fields, {
+      name: 'joe osburn',
+      email: 'joe@jnodev.com'
+    });
+
+    const actual = toSentence(fieldsWithValues);
+    const expected = 'My name is joe osburn joe@jnodev.com';
+
+    expectToEqual(actual, expected);
+  });
+
+  it('Sentence of values with some phrases', () => {
+    const fields = toFields({
+      name: {
+        _input: 'name',
+        _format: (val, field) => val.toUpperCase(),
+        _phrase: (val, field) => `My name is ${val}`
+      },
+      email: 'email'
+    });
+
+    const fieldsWithValues = mapFieldValues(fields, {
+      name: 'joe osburn'
+    });
+
+    const actual = toSentence(fieldsWithValues);
+    const expected = 'My name is JOE OSBURN';
+
+    expectToEqual(actual, expected);
+  });
+
+
+  it('Sentence with nested fields', () => {
+    const fields = toFields({
+      name: 'name',
+      address: {
+        zip: 'text',
+        state: 'text',
+        country: 'text'
+      },
+      phone: 'text'
+    });
+
+    const fieldsWithValues = mapFieldValues(fields, {
+      name: 'joe osburn',
+      address: {
+        zip: '76177',
+        state: 'TX',
+        country: 'US'
+      },
+      phone: '817-945-6101'
+    });
+
+    const actual = toSentence(fieldsWithValues);
+    const expected = 'joe osburn 76177 TX US 817-945-6101';
+
+    expectToEqual(actual, expected);
+  });
+
+
+  it('Sentence with nested fields with formats and phrases', () => {
+    const fields = toFields({
+      name: 'name',
+      address: {
+        state: {
+          _input: 'text',
+          _phrase: (val, field) => `lives in ${val}`
+        }
+      },
+      phone: {
+        _input: 'text',
+        _format: (val, field) => val.replace(/\s/g, '-'),
+        _phrase: (val, field) => `and can be reached at ${val}`
+      }
+    });
+
+    const fieldsWithValues = mapFieldValues(fields, {
+      name: 'joe osburn',
+      address: {
+        zip: '76177',
+        state: 'TX',
+        country: 'US'
+      },
+      phone: '817 945 6101'
+    });
+
+    const actual = toSentence(fieldsWithValues);
+    const expected = 'joe osburn lives in TX and can be reached at 817-945-6101';
+
+    expectToEqual(actual, expected);
+  });
+
+
+});
 
 describe('Schema Parser', () => {
   describe('Shorthand', () => {
@@ -32,6 +174,8 @@ describe('Schema Parser', () => {
         help: false,
         multiple: false,
         required: false,
+        format: undefined,
+        phrase: undefined,
         pattern: null,
         model: false,
         disabled: false,
@@ -64,6 +208,8 @@ describe('Schema Parser', () => {
         required: true,
         pattern: null,
         model: false,
+        format: undefined,
+        phrase: undefined,
         disabled: false,
         autocapitalize: 'off',
         autocomplete: 'email',
@@ -92,6 +238,8 @@ describe('Schema Parser', () => {
         help: false,
         multiple: false,
         required: true,
+        format: undefined,
+        phrase: undefined,
         pattern: null,
         model: 'Author',
         disabled: false,
@@ -117,6 +265,8 @@ describe('Schema Parser', () => {
         placeholder: false,
         help: false,
         multiple: false,
+        format: undefined,
+        phrase: undefined,
         required: true,
         pattern: 'https://.*',
         model: false,
@@ -143,14 +293,18 @@ describe('Schema Parser', () => {
         help: false,
         multiple: true,
         required: false,
+        format: undefined,
+        phrase: undefined,
         pattern: null,
+        format: undefined,
+        phrase: undefined,
         model: 'Tag',
         disabled: false,
         value: undefined,
         css: '',
         input: 'select',
         type: 'relationship',
-        name: 'tags[]'
+        name: 'tags'
       }];
 
       expectToEqual(actual, expected);
@@ -168,6 +322,8 @@ describe('Schema Parser', () => {
         help: false,
         multiple: false,
         required: false,
+        format: undefined,
+        phrase: undefined,
         pattern: null,
         model: false,
         disabled: false,
@@ -229,6 +385,8 @@ describe('Schema Parser', () => {
         pattern: null,
         model: false,
         disabled: false,
+        format: undefined,
+        phrase: undefined,
         value: undefined,
         css: '',
         type: 'text',
@@ -265,16 +423,20 @@ describe('Schema Parser', () => {
         multiple: false,
         required: false,
         pattern: null,
+        format: undefined,
+        phrase: undefined,
         model: false,
         label: 'Theme',
         prop: 'theme',
-        type: 'fieldset',
+        input: 'fieldset',
         children: [{
           css: '',
           disabled: false,
           value: undefined,
           placeholder: false,
           help: false,
+          format: undefined,
+          phrase: undefined,
           multiple: false,
           required: false,
           pattern: null,
@@ -282,7 +444,7 @@ describe('Schema Parser', () => {
           label: 'Color',
           type: 'text',
           input: 'color',
-          name: 'theme[color]',
+          name: 'theme.color',
           prop: 'color'
         }]
       }];
@@ -295,7 +457,7 @@ describe('Schema Parser', () => {
       const actual = toFields({
         theme: {
           _label: 'Theme',
-          _type: 'fieldset',
+          _input: 'fieldset',
           color: {
             _label: 'Color',
             _type: 'text',
@@ -313,15 +475,19 @@ describe('Schema Parser', () => {
         multiple: false,
         required: false,
         pattern: null,
+        format: undefined,
+        phrase: undefined,
         model: false,
         label: 'Theme',
-        type: 'fieldset',
+        input: 'fieldset',
         prop: 'theme',
         children: [{
           css: '',
           disabled: false,
           value: undefined,
           placeholder: false,
+          format: undefined,
+          phrase: undefined,
           help: false,
           multiple: false,
           required: false,
@@ -330,7 +496,7 @@ describe('Schema Parser', () => {
           label: 'Color',
           type: 'text',
           input: 'color',
-          name: 'theme[color]',
+          name: 'theme.color',
           prop: 'color'
         }]
       }];
@@ -370,6 +536,8 @@ describe('Schema Parser', () => {
         help: false,
         multiple: false,
         required: false,
+        format: undefined,
+        phrase: undefined,
         pattern: null,
         model: false,
         label: 'Title',
@@ -416,6 +584,8 @@ describe('Schema Parser', () => {
         help: false,
         multiple: true,
         required: false,
+        format: undefined,
+        phrase: undefined,
         pattern: null,
         model: 'Tag',
         disabled: false,
@@ -423,7 +593,7 @@ describe('Schema Parser', () => {
         css: '',
         input: 'select',
         type: 'relationship',
-        name: 'tags[]'
+        name: 'tags'
       }];
 
       expectToEqual(actual, expected);
@@ -453,6 +623,10 @@ describe('Schema Parser', () => {
             name: 'comments[][user]',
             required: false,
             disabled: false,
+            format: undefined,
+            phrase: undefined,
+            format: undefined,
+            phrase: undefined,
             autocapitalize: false,
             autocomplete: false,
             autocorrect: false,
@@ -473,6 +647,8 @@ describe('Schema Parser', () => {
             placeholder: false,
             name: 'comments[][date]',
             disabled: false,
+            format: undefined,
+            phrase: undefined,
             autocapitalize: false,
             autocomplete: false,
             autocorrect: false,
@@ -491,6 +667,8 @@ describe('Schema Parser', () => {
             disabled: false,
             css: '',
             value: undefined,
+            format: undefined,
+            phrase: undefined,
             prop: 'comment',
             pattern: 'markdown validator',
             placeholder: 'Enter markdown',
@@ -504,13 +682,15 @@ describe('Schema Parser', () => {
         model: false,
         multiple: true,
         prop: 'comments',
+        format: undefined,
+        phrase: undefined,
         disabled: false,
         css: '',
         value: undefined,
         pattern: null,
         placeholder: false,
         required: false,
-        type: 'fieldset'
+        input: 'fieldset'
       }];
 
       expectToEqual(actual, expected);
