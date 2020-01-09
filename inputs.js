@@ -116,13 +116,17 @@ const INPUT_TABLE = module.exports = {
     _input: 'fieldset'
     // ,
     // _legend: undefined
-  }
+  },
 
-  // 'currency': {
-  //   'input': 'number',
-  //   'type': 'number',
-  //   'pattern': ''
-  // }
+  password: {
+    _input: 'text',
+    _type: 'password',
+    _autocapitalize: false,
+    _autocomplete: false,
+    _autocorrect: false,
+    _spellcheck: false,
+    _xAutocompletetype: false
+  }
 
   // 'phone': {
   //   'type': 'tel',
