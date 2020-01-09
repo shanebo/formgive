@@ -93,58 +93,58 @@ const expandShorthand = (str) => {
 
 
 
-const createField = (prop, value) => {
-  const type = typeOf(value);
+const createField = (prop, setting) => {
+  const type = typeOf(setting);
 
   if (type === 'string') {
-    return expandShorthand(value);
+    return expandShorthand(setting);
 
   } else if (type === 'array') {
-    const field = toField(prop, value[0]);
+    const field = toField(prop, setting[0]);
     field._multiple = true;
     return field;
 
   } else if (type === 'object') {
-    if (!getMetaProps(value).length || prop === 'fieldset') {
-      value._input = 'fieldset';
+    if (!getMetaProps(setting).length || prop === 'fieldset') {
+      setting._input = 'fieldset';
     }
 
-    if (value._input === 'fieldset') {
-      value._children = makeFieldsBaby(value);
-      value._children.forEach(child => delete value[child._prop]);
+    if (setting._input === 'fieldset') {
+      setting._children = makeFieldsBaby(setting);
+      setting._children.forEach(child => delete setting[child._prop]);
     }
 
-    if (INPUT_TABLE[value._input]) {
-      return Object.assign({}, INPUT_TABLE[value._input], value);
+    if (INPUT_TABLE[setting._input]) {
+      return Object.assign({}, INPUT_TABLE[setting._input], setting);
     }
 
-    return value;
+    return setting;
   }
 }
 
 
-const toField = (prop, value) => {
+const toField = (prop, setting) => {
   return {
     ...baseField(prop),
-    ...createField(prop, value)
+    ...createField(prop, setting)
   };
 }
 
 
 
 
-const cleanupFunkNasty = (field) => {
+const removeMetaPropUnderscores = (field) => {
   const obj = {};
   Object.keys(field).forEach(originalKey => {
     const key = originalKey.startsWith('_')
       ? originalKey.substring(1)
       : originalKey;
-    const value = field[originalKey];
-    obj[key] = Array.isArray(value)
-      ? value.map(cleanupFunkNasty)
-      : value !== null && typeof value === 'object'
-        ? cleanupFunkNasty(value)
-        : value;
+    const setting = field[originalKey];
+    obj[key] = Array.isArray(setting)
+      ? setting.map(removeMetaPropUnderscores)
+      : setting !== null && typeof setting === 'object'
+        ? removeMetaPropUnderscores(setting)
+        : setting;
   });
   return obj;
 }
@@ -157,14 +157,14 @@ const makeFieldsBaby = (schema) => {
 
 const toFields = (schema) => {
   const fields = makeFieldsBaby(schema);
-  const cleanedFields = fields.map(cleanupFunkNasty);
+  const cleanedFields = fields.map(removeMetaPropUnderscores);
   return addParamNames(cleanedFields);
 }
 
 
 // const toFields = (schema) => {
 //   const fields = getNonMetaProps(schema).map((prop) => toField(prop, schema[prop]));
-//   const cleanedFields = fields.map(cleanupFunkNasty);
+//   const cleanedFields = fields.map(removeMetaPropUnderscores);
 //   return addParamNames(cleanedFields);
 // }
 
