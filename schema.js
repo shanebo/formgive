@@ -331,10 +331,9 @@ const toSentence = (fields) => {
 
 
 
-exports.toSentence = toSentence;
-
 exports.toBase = toBase;
 exports.toField = toField;
 exports.toFields = toFields;
+exports.toSentence = toSentence;
 exports.mapFieldValues = mapFieldValues;
 exports.expandShorthand = expandShorthand;
