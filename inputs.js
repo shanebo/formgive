@@ -23,6 +23,14 @@ const INPUT_TABLE = module.exports = {
     _xAutocompletetype: false
   },
 
+  selectsearch: {
+    _input: 'selectsearch'
+  },
+
+  association: {
+    _input: 'association'
+  },
+
   date: {
     _input: 'date',
     _type: 'text',
@@ -91,8 +99,7 @@ const INPUT_TABLE = module.exports = {
   },
 
   select: {
-    _input: 'select',
-    _type: 'text'
+    _input: 'select'
   },
 
   switch: {
