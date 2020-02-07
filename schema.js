@@ -1,3 +1,4 @@
+const klona = require('klona');
 const { typeOf, humanize } = require('./utils');
 const INPUT_TABLE = require('./inputs');
 
@@ -29,12 +30,18 @@ const META_PROPS = [
 const isMetaProp = (prop) => META_PROPS.includes(prop);
 const getMetaProps = (obj) => Object.keys(obj).filter(prop => META_PROPS.includes(prop));
 const getNonMetaProps = (obj) => Object.keys(obj).filter(prop => !META_PROPS.includes(prop));
-const SHORTHAND_PARAMS = ['*', ':', '!'];
-const PARAM_TABLE = {
-  '*': 'required',
-  '@': 'model',
-  ':': 'type',
-  '!': 'pattern'
+const SHORTHAND_FLAGS = {
+  '*': { _required: true },
+  '×': { _disabled: true },
+  '@': (model) => ({
+    _type: 'association',
+    _model: model
+  })
+  // '*': 'required',
+  // '@': 'model',
+  // ':': 'type',
+  // '!': 'pattern',
+  // '×': 'disabled'
   // ':': '_input',
   // '/': '_disabled'
   // '?': '_help'
@@ -60,36 +67,140 @@ const baseField = (prop) => ({
   });
 
 
+// const expandShorthand = (str) => {
+//   const regex = /(\*)?([^\:!*]+)(\*)?((?:\:|!)[^\:!*]+)?(\*)?((?:\:|!)[^\:!*]+)?(\*)?$/g;
+//   const matches = regex.exec(str).filter(match => match);
+//   matches.shift();
+
+//   const field = matches.map(match => {
+//     const paramType = match.charAt(0);
+//     const param = match.replace(/[@!×\*]/gi, '');
+
+//     console.log('\n\n');
+//     console.log({match});
+//     console.log({param});
+//     console.log({paramType});
+
+
+//     // const param = SHORTHAND_PARAMS.reduce((match, str) => match.replace(str, ''));
+
+//     if (paramType === '*') {
+//       return {
+//         required: true
+//       };
+//     } else if (paramType === '×') {
+//       return {
+//         disabled: true
+//       };
+//     } else if (paramType === '@') {
+//       return {
+//         input: 'select',
+//         type: 'relationship',
+//         model: param
+//       };
+//     } else if (!SHORTHAND_PARAMS.includes(paramType)) {
+//       return INPUT_TABLE[param];
+//     }
+
+//     return {
+//       [SHORTHAND_FLAGS[paramType]]: param
+//     };
+//   });
+
+//   return Object.assign({}, ...field);
+// }
+
+
+
+
+
+
+
+
 const expandShorthand = (str) => {
-  const regex = /(\*)?([^\:!*]+)(\*)?((?:\:|!)[^\:!*]+)?(\*)?((?:\:|!)[^\:!*]+)?(\*)?$/g;
-  const matches = regex.exec(str).filter(match => match);
-  matches.shift();
+  const field = {};
+  const input = str.replace(/\*|×|([@:][a-zA-Z]*)/g, (match) => {
+    const matchSetting = SHORTHAND_FLAGS[match];
+    Object.assign(field, matchSetting);
+    if (!matchSetting) {
 
-  const field = matches.map(match => {
-    const paramType = match.charAt(0);
-    const param = match.replace(/[@!\*]/gi, '');
-
-    if (paramType === '*') {
-      return {
-        required: true
-      };
-    } else if (paramType === '@') {
-      return {
-        input: 'select',
-        type: 'relationship',
-        model: param
-      };
-    } else if (!SHORTHAND_PARAMS.includes(paramType)) {
-      return INPUT_TABLE[param];
+      console.log('match.substr(1)');
+      console.log(match.substr(1));
+      Object.assign(field, SHORTHAND_FLAGS[match.charAt(0)](match.substr(1)));
     }
-
-    return {
-      [PARAM_TABLE[paramType]]: param
-    };
+    return '';
   });
 
-  return Object.assign({}, ...field);
+  return Object.assign(field, INPUT_TABLE[input]);
 }
+
+
+
+// const expandShorthand = (str) => {
+//   const fielder = {};
+//   const input = str.replace(/\*|×|([@:][a-zA-Z]*)/g, (flag, prop) => {
+//     if (prop) {
+//       const type = prop.charAt(0);
+//       const val = prop.substr(1);
+//       if (type === '@') {
+//         Object.assign(fielder, {
+//           _type: 'relationship',
+//           _model: val
+//         });
+//       }
+//     } else {
+//       Object.assign(fielder, SHORTHAND_FLAGS[flag]);
+//     }
+
+//     console.log({ flag });
+//     console.log({ prop });
+
+//     return '';
+//   });
+
+//   if (input) {
+//     Object.assign(fielder, INPUT_TABLE[input]);
+//   }
+//   // console.log({ fielder });
+//   return fielder;
+// }
+
+
+
+
+
+
+// const expandShorthand = (str) => {
+//   const regex = /(\*)?([^\:!*]+)(\*)?((?:\:|!)[^\:!*]+)?(\*)?((?:\:|!)[^\:!*]+)?(\*)?$/g;
+//   const matches = regex.exec(str).filter(match => match);
+//   matches.shift();
+
+//   const field = matches.map(match => {
+//     const paramType = match.charAt(0);
+//     const param = match.replace(/[@!×\*]/gi, '');
+//     return {
+//       ...(paramType === '*' && {
+//         required: true
+//       }),
+//       ...(paramType === '×' && {
+//         disabled: true
+//       }),
+//       ...(paramType === '@' && {
+//         input: 'select',
+//         type: 'relationship',
+//         model: param
+//       }),
+//       ...(!SHORTHAND_PARAMS.includes(paramType) &&
+//         INPUT_TABLE[param]
+//       )
+//       };
+//   });
+
+//   return Object.assign({}, ...field);
+// }
+
+
+
 
 
 
@@ -123,12 +234,10 @@ const createField = (prop, setting) => {
 }
 
 
-const toField = (prop, setting) => {
-  return {
-    ...baseField(prop),
-    ...createField(prop, setting)
-  };
-}
+const toField = (prop, setting) => ({
+  ...baseField(prop),
+  ...createField(prop, setting)
+});
 
 
 
@@ -155,9 +264,52 @@ const makeFieldsBaby = (schema) => {
 }
 
 
-const toFields = (schema) => {
-  const fields = makeFieldsBaby(schema);
+const hydrateField = (field, doc) => {
+  const { prop, children, multiple } = field;
+  const item = typeOf(doc) === 'object' ? doc[prop] : '';
+
+  if (children && multiple) {
+    const len = item.length;
+    const values = [];
+    for (let index = 0; index < len; index++) {
+      const val = children.map(f => ({
+          ...f,
+          ...{
+            value: item[index][f.prop] // hydrateField()?
+          }
+        }));
+      values.push(val);
+    }
+    field.values = values;
+  } else if (children && !multiple) {
+    // object
+    field.children = children.map(field => hydrateField(field, item));
+  } else if (multiple) {
+    // array
+    field.values = item.map(value => ({
+        ...field,
+        ...{
+          multiple: false,
+          label: '',
+          value
+        }
+      }));
+  } else {
+    // string
+    field.value = item;
+  }
+  return field;
+}
+
+
+const toFields = (schema, doc) => {
+  const fields = makeFieldsBaby(klona(schema));
   const cleanedFields = fields.map(removeMetaPropUnderscores);
+  if (doc) {
+    const hydratedFields = cleanedFields.map(field => hydrateField(field, doc));
+    return addParamNames(hydratedFields);
+  }
+  // const hydratedFields = cleanedFields.map(field => hydrateField(field, doc));
   return addParamNames(cleanedFields);
 }
 

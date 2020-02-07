@@ -1,10 +1,11 @@
 // const { expect } = require('chai');
 // const { toFields, mapFieldValues } = require('./schema');
 
-const {
-  expect
-} = require('chai');
+const chai = require('chai');
+const chaiSubset = require('chai-subset');
+chai.use(chaiSubset);
 
+const { expect } = chai;
 const { toFields, mapFieldValues, toSentence } = require('./schema');
 
 // const { toBase, toValidDoc } = require('../app/subapps/hub/validator');
@@ -17,8 +18,111 @@ const expectToEqual = (actual, expected) => {
   expect(actual).to.deep.equal(expected);
 }
 
+
+
+
+
+
+
+
+describe('Hydrated fields', () => {
+  it('Simple hydration of multiple field', () => {
+    const actual = toFields({
+      type: 'text',
+      tags: [{
+        name: 'text'
+      }]
+    }, {
+      type: 'RESOURCE',
+      tags: [
+        {
+          name: 'theology'
+        },
+        {
+          name: 'practice'
+        },
+        {
+          name: 'application'
+        }
+      ]
+    });
+
+    console.log(actual[1].values);
+
+    expect(actual[1].values).to.deep.includes({
+      values: [
+        [{
+          value: 'theology'
+        }],
+        [{
+          value: 'practice'
+        }],
+        [{
+          value: 'application'
+        }]
+      ]
+    });
+
+    // expect(actual[0].children[0]).to.deep.includes({
+    //   value: '123 Sesame street'
+    // });
+  });
+
+  it('Simple hydration of nested field', () => {
+    const actual = toFields({
+      address: {
+        street: 'text'
+      }
+    }, {
+      address: {
+        street: '123 Sesame street'
+      }
+    });
+
+    console.log(actual[0].children);
+
+    expect(actual[0].children[0]).to.deep.includes({
+      value: '123 Sesame street'
+    });
+
+    // expect(actual[0].children[0]).to.deep.includes({
+    //   value: '123 Sesame street'
+    // });
+  });
+
+  it('Simple hydration of fields', () => {
+    const actual = toFields({
+      name: 'text',
+      email: 'text',
+      address: {
+        street: 'text'
+      }
+    }, {
+      name: 'Joe Osburn',
+      // email: 'joe@jnodev.com',
+      // address: {
+      //   street: '123 Sesame street'
+      // }
+    });
+
+    expect(actual[0]).to.deep.include({
+      name: 'name',
+      value: 'Joe Osburn'
+    });
+  });
+});
+
+
+
+
+
+
+
+
+
 describe('To sentence', () => {
-  it.only('Sentence of values with currency', () => {
+
+  it.skip('Sentence of values with currency', () => {
     const fields = toFields({
       amount: {
         min: 'currency',
@@ -226,9 +330,20 @@ describe('Schema Parser', () => {
       expectToEqual(actual, expected);
     });
 
-    it('required relationship using select', () => {
+    it('disabled text field', () => {
       const actual = toFields({
-        author: '*@Author'
+        status: '×*text@Donation'
+      });
+
+      expect(actual[0]).to.containSubset({
+        disabled: true,
+        input: 'text'
+      });
+    });
+
+    it('required association using select', () => {
+      const actual = toFields({
+        author: '*select@Author'
       });
 
       const expected = [{
@@ -246,7 +361,7 @@ describe('Schema Parser', () => {
         value: undefined,
         css: '',
         input: 'select',
-        type: 'relationship',
+        type: 'association',
         name: 'author'
       }];
 
@@ -281,9 +396,9 @@ describe('Schema Parser', () => {
       expectToEqual(actual, expected);
     });
 
-    it('multiple via relationship', () => {
+    it('multiple via association', () => {
       const actual = toFields({
-        'tags': ['@Tag']
+        'tags': ['select@Tag']
       });
 
       const expected = [{
@@ -303,7 +418,7 @@ describe('Schema Parser', () => {
         value: undefined,
         css: '',
         input: 'select',
-        type: 'relationship',
+        type: 'association',
         name: 'tags'
       }];
 
@@ -572,7 +687,7 @@ describe('Schema Parser', () => {
         tags: [{
           _label: 'Tags',
           _input: 'select',
-          _type: 'relationship',
+          _type: 'association',
           _model: 'Tag'
         }]
       });
@@ -592,14 +707,14 @@ describe('Schema Parser', () => {
         value: undefined,
         css: '',
         input: 'select',
-        type: 'relationship',
+        type: 'association',
         name: 'tags'
       }];
 
       expectToEqual(actual, expected);
     });
 
-    it('multiple with multiple fields', () => {
+    it.skip('multiple with multiple fields', () => {
       const actual = toFields({
         comments: [{
           user: 'text',
