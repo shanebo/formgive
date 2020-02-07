@@ -6,7 +6,7 @@
   "keywords": [
     "form structures"
   ],
-  "repository": "git://github.com/shanebo/beard.git",
+  "repository": "git://github.com/shanebo/formgive.git",
   "author": "Shane Thacker <shane@steadymade.com>",
   "engine": ">= 0.4.1",
   "main": "./schema",
