@@ -23,14 +23,6 @@ const INPUT_TABLE = module.exports = {
     _xAutocompletetype: false
   },
 
-  selectsearch: {
-    _input: 'selectsearch'
-  },
-
-  association: {
-    _input: 'association'
-  },
-
   date: {
     _input: 'date',
     _type: 'text',
@@ -131,15 +123,87 @@ const INPUT_TABLE = module.exports = {
     _autocorrect: false,
     _spellcheck: false,
     _xAutocompletetype: false
+  },
+
+  option: {
+    _input: 'combobox',
+    _type: 'option',
+    _mode: 'default',
+    _search: false,
+    _remote: false,
+    _single: true
+  },
+
+  multioption: {
+    _input: 'combobox',
+    _type: 'multioption',
+    _mode: 'default',
+    _search: true,
+    _remote: false,
+    _single: false
+  },
+
+  tags: {
+    _input: 'combobox',
+    _type: 'tags',
+    _mode: 'tags',
+    _search: true,
+    _single: false,
+    _remote: false,
+  },
+
+  selectsearch: {
+    _input: 'combobox',
+    _mode: 'default',
+    _remote: false,
+    _single: true
+  },
+
+  association: {
+    _input: 'combobox',
+    _type: 'association',
+    _mode: 'search',
+    _remote: true,
+    _search: false,
+    _single: true
+  },
+
+  associations: {
+    _input: 'combobox',
+    _type: 'associations',
+    _mode: 'search',
+    _remote: true,
+    _search: false,
+    _single: false
+  },
+
+  combobox: {
+    _input: 'combobox',
+    _type: 'tags',
+    _mode: 'tags',
+    _remote: false,
+    _search: true,
+    _single: false
+  },
+
+  phone: {
+    _input: 'phone',
+    _type: 'tel',
+    _pattern: '[0-9]*',
+    _autocapitalize: 'off',
+    _autocomplete: 'phone',
+    _autocorrect: 'off',
+    _spellcheck: 'off',
+    _xAutocompletetype: 'phone'
+  },
+
+  ccnumber: {
+    _input: 'ccnumber',
+    _type: 'tel',
+    _autocapitalize: 'off',
+    _autocomplete: 'ccnumber',
+    _autocorrect: 'off',
+    _spellcheck: 'off',
+    _xAutocompletetype: 'ccnumber'
   }
-
-  // 'phone': {
-  //   'type': 'tel',
-  //   'pattern': '[0-9]*'
-  // },
-
-  // 'credit-card': {
-  //   'type': 'text',
-  //   'pattern': '[0-9]*'
-  // },
 };
