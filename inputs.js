@@ -47,7 +47,7 @@ const INPUT_TABLE = module.exports = {
 
   email: {
     _input: 'email',
-    _type: 'text',
+    _type: 'email',
     _autocapitalize: 'off',
     _autocomplete: 'email',
     _autocorrect: 'off',
