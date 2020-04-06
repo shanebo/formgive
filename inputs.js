@@ -82,7 +82,8 @@ const INPUT_TABLE = module.exports = {
 
   currency: {
     _input: 'currency',
-    _type: 'number',
+    _type: 'text',
+    _prefix: '$',
     _autocapitalize: false,
     _autocomplete: false,
     _autocorrect: false,
