@@ -8,6 +8,7 @@ const META_PROPS = [
   '_input',
   '_type',
   '_placeholder',
+  '_prefix',
   '_help',
   '_required',
   '_multiple',
