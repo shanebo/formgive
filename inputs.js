@@ -41,7 +41,6 @@ const INPUT_TABLE = module.exports = {
     _xAutocompletetype: false,
     _pattern: /./,
     _format: (d) => dayjs(d).format('MM/DD/YYYY') // allow a default date format at the global level
-
     // _formatter: (val) => formatDate(val)
   },
 
@@ -122,8 +121,6 @@ const INPUT_TABLE = module.exports = {
 
   fieldset: {
     _input: 'fieldset'
-    // ,
-    // _legend: undefined
   },
 
   password: {
