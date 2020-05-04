@@ -100,7 +100,7 @@ const createField = (prop, setting) => {
     }
 
     if (setting._input === 'fieldset') {
-      setting._children = makeFieldsBaby(setting);
+      setting._children = toNonMetaFields(setting);
       setting._children.forEach(child => delete setting[child._prop]);
     }
 
@@ -136,9 +136,8 @@ const removeMetaPropUnderscores = (field) => {
 }
 
 
-const makeFieldsBaby = (schema) => {
-  return getNonMetaProps(schema).map((prop) => toField(prop, schema[prop]));
-}
+const toNonMetaFields = (schema) => getNonMetaProps(schema)
+  .map((prop) => toField(prop, schema[prop]));
 
 
 const hydrateField = (field, doc) => {
@@ -180,7 +179,7 @@ const hydrateField = (field, doc) => {
 
 
 const toFields = (schema, doc) => {
-  const fields = makeFieldsBaby(klona(schema));
+  const fields = toNonMetaFields(klona(schema));
   const cleanedFields = fields.map(removeMetaPropUnderscores);
   if (doc) {
     const hydratedFields = cleanedFields.map(field => hydrateField(field, doc));
