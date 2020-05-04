@@ -2,7 +2,7 @@ const dayjs = require('dayjs');
 const { toCurrency } = require('./utils');
 
 // also account for autocorrect, autocomplete, spellcheck, attributes etc.
-const INPUT_TABLE = module.exports = {
+module.exports = {
   name: {
     _input: 'name',
     _type: 'text',
@@ -62,7 +62,15 @@ const INPUT_TABLE = module.exports = {
 
   checkbox: {
     _input: 'checkbox',
-    _type: 'boolean',
+    _type: '',
+    _checked: false,
+    _value: false
+  },
+
+  switch: {
+    _input: 'checkbox',
+    _type: 'switch',
+    _checked: false,
     _value: false
   },
 
@@ -83,22 +91,8 @@ const INPUT_TABLE = module.exports = {
     _xAutocompletetype: false
   },
 
-  markdown: {
-    _input: 'markdown',
-    _type: 'text',
-    _pattern: 'markdown validator',
-    _placeholder: 'Enter markdown'
-  },
-
   select: {
     _input: 'select'
-  },
-
-  switch: {
-    _input: 'switch',
-    _type: 'boolean',
-    _checked: false,
-    _value: false
   },
 
   radio: {

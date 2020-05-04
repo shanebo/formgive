@@ -33,7 +33,7 @@ const getMetaProps = (obj) => Object.keys(obj).filter(prop => META_PROPS.include
 const getNonMetaProps = (obj) => Object.keys(obj).filter(prop => !META_PROPS.includes(prop));
 const SHORTHAND_FLAGS = {
   '*': { _required: true },
-  '×': { _disabled: true },
+  '!': { _disabled: true },
   '@': (model) => ({
     _type: 'association',
     _model: model
@@ -42,7 +42,7 @@ const SHORTHAND_FLAGS = {
   // '@': 'model',
   // ':': 'type',
   // '!': 'pattern',
-  // '×': 'disabled'
+  // '!': 'disabled'
   // ':': '_input',
   // '/': '_disabled'
   // '?': '_help'
@@ -58,6 +58,7 @@ const baseField = (prop) => ({
     _help: false,
     _multiple: false,
     _required: false,
+    _prefix: null,
     _pattern: null,
     _model: false,
     _disabled: false,
@@ -75,7 +76,7 @@ const baseField = (prop) => ({
 
 //   const field = matches.map(match => {
 //     const paramType = match.charAt(0);
-//     const param = match.replace(/[@!×\*]/gi, '');
+//     const param = match.replace(/[@!!\*]/gi, '');
 
 //     console.log('\n\n');
 //     console.log({match});
@@ -89,7 +90,7 @@ const baseField = (prop) => ({
 //       return {
 //         required: true
 //       };
-//     } else if (paramType === '×') {
+//     } else if (paramType === '!') {
 //       return {
 //         disabled: true
 //       };
@@ -120,7 +121,7 @@ const baseField = (prop) => ({
 
 const expandShorthand = (str) => {
   const field = {};
-  const input = str.replace(/\*|×|([@:][a-zA-Z]*)/g, (match) => {
+  const input = str.replace(/\*|!|([@:][a-zA-Z]*)/g, (match) => {
     const matchSetting = SHORTHAND_FLAGS[match];
     Object.assign(field, matchSetting);
     if (!matchSetting) {
@@ -139,7 +140,7 @@ const expandShorthand = (str) => {
 
 // const expandShorthand = (str) => {
 //   const fielder = {};
-//   const input = str.replace(/\*|×|([@:][a-zA-Z]*)/g, (flag, prop) => {
+//   const input = str.replace(/\*|!|([@:][a-zA-Z]*)/g, (flag, prop) => {
 //     if (prop) {
 //       const type = prop.charAt(0);
 //       const val = prop.substr(1);
@@ -178,12 +179,12 @@ const expandShorthand = (str) => {
 
 //   const field = matches.map(match => {
 //     const paramType = match.charAt(0);
-//     const param = match.replace(/[@!×\*]/gi, '');
+//     const param = match.replace(/[@!!\*]/gi, '');
 //     return {
 //       ...(paramType === '*' && {
 //         required: true
 //       }),
-//       ...(paramType === '×' && {
+//       ...(paramType === '!' && {
 //         disabled: true
 //       }),
 //       ...(paramType === '@' && {
