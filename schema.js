@@ -28,7 +28,6 @@ const META_PROPS = [
   '_css'
 ];
 
-const isMetaProp = (prop) => META_PROPS.includes(prop);
 const getMetaProps = (obj) => Object.keys(obj).filter(prop => META_PROPS.includes(prop));
 const getNonMetaProps = (obj) => Object.keys(obj).filter(prop => !META_PROPS.includes(prop));
 const SHORTHAND_FLAGS = {
