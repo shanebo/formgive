@@ -31,23 +31,8 @@ describe('Hydrated fields', () => {
       ]
     });
 
-    expect(actual[1].values).to.deep.includes({
-      values: [
-        [{
-          value: 'theology'
-        }],
-        [{
-          value: 'practice'
-        }],
-        [{
-          value: 'application'
-        }]
-      ]
-    });
-
-    // expect(actual[0].children[0]).to.deep.includes({
-    //   value: '123 Sesame street'
-    // });
+    const values = actual[1].values.map((obj) => obj[0].value);
+    expect(values).to.eql([ 'theology', 'practice', 'application' ]);
   });
 
   it('Simple hydration of nested field', () => {
@@ -64,10 +49,6 @@ describe('Hydrated fields', () => {
     expect(actual[0].children[0]).to.deep.includes({
       value: '123 Sesame street'
     });
-
-    // expect(actual[0].children[0]).to.deep.includes({
-    //   value: '123 Sesame street'
-    // });
   });
 
   it('Simple hydration of fields', () => {
@@ -78,11 +59,7 @@ describe('Hydrated fields', () => {
         street: 'text'
       }
     }, {
-      name: 'Joe Osburn',
-      // email: 'joe@jnodev.com',
-      // address: {
-      //   street: '123 Sesame street'
-      // }
+      name: 'Joe Osburn'
     });
 
     expect(actual[0]).to.deep.include({
@@ -92,9 +69,8 @@ describe('Hydrated fields', () => {
   });
 });
 
-describe('To sentence', () => {
-
-  it.skip('Sentence of values with currency', () => {
+describe('toSentence', () => {
+  it('Sentence of values with currency', () => {
     const fields = toFields({
       amount: {
         min: 'currency',
@@ -110,7 +86,7 @@ describe('To sentence', () => {
     });
 
     const actual = toSentence(fieldsWithValues);
-    const expected = 'joe osburn joe@jnodev.com';
+    const expected = '$30.00 $1,000.00';
 
     expectToEqual(actual, expected);
   });
@@ -247,6 +223,7 @@ describe('Schema Parser', () => {
         label: 'Name',
         prop: 'name',
         placeholder: false,
+        prefix: null,
         help: false,
         multiple: false,
         required: false,
@@ -279,6 +256,7 @@ describe('Schema Parser', () => {
         label: 'Email',
         prop: 'email',
         placeholder: false,
+        prefix: null,
         help: false,
         multiple: false,
         required: true,
@@ -295,7 +273,7 @@ describe('Schema Parser', () => {
         value: undefined,
         css: '',
         input: 'email',
-        type: 'text',
+        type: 'email',
         name: 'email'
       }];
 
@@ -322,6 +300,7 @@ describe('Schema Parser', () => {
         label: 'Author',
         prop: 'author',
         placeholder: false,
+        prefix: null,
         help: false,
         multiple: false,
         required: true,
@@ -342,14 +321,14 @@ describe('Schema Parser', () => {
 
     it('required url', () => {
       const actual = toFields({
-        price: '*url'
-        // price: '*number:tel!currency'
+        website: '*url'
       });
 
       const expected = [{
-        label: 'Price',
-        prop: 'price',
+        label: 'Website',
+        prop: 'website',
         placeholder: false,
+        prefix: null,
         help: false,
         multiple: false,
         format: undefined,
@@ -362,7 +341,7 @@ describe('Schema Parser', () => {
         css: '',
         input: 'url',
         type: 'text',
-        name: 'price'
+        name: 'website'
       }];
 
       expectToEqual(actual, expected);
@@ -377,6 +356,7 @@ describe('Schema Parser', () => {
         label: 'Tags',
         prop: 'tags',
         placeholder: false,
+        prefix: null,
         help: false,
         multiple: true,
         required: false,
@@ -406,6 +386,7 @@ describe('Schema Parser', () => {
         label: 'Member',
         prop: 'member',
         placeholder: false,
+        prefix: null,
         help: false,
         multiple: false,
         required: false,
@@ -415,9 +396,10 @@ describe('Schema Parser', () => {
         model: false,
         disabled: false,
         value: false,
+        checked: false,
         css: '',
         input: 'checkbox',
-        type: 'boolean',
+        type: '',
         name: 'member'
       }];
 
@@ -426,30 +408,57 @@ describe('Schema Parser', () => {
   });
 
   describe('Longhand', () => {
+    it('radio', () => {
+      const actual = toFields({
+        hasDonation: {
+          '_prop': 'hasDonation',
+          '_label': 'Donor',
+          '_input': 'radio',
+          '_options': [
+            {
+              'label': 'True',
+              'value': true
+            },
+            {
+              'label': 'False',
+              'value': false
+            }
+          ]
+        }
+      });
 
-    // it('radio', () => {
-    //   const actual = toFields({
-    //     hasDonation: {
-    //       '_prop': 'hasDonation',
-    //       '_label': 'Donor',
-    //       '_input': 'radio',
-    //       '_options': [
-    //         {
-    //           'label': 'True',
-    //           'value': true
-    //         },
-    //         {
-    //           'label': 'False',
-    //           'value': false
-    //         }
-    //       ]
-    //     }
-    //   });
+      const expected = [{
+        label: 'Donor',
+        prop: 'hasDonation',
+        placeholder: false,
+        prefix: null,
+        help: false,
+        multiple: false,
+        required: false,
+        pattern: null,
+        model: false,
+        disabled: false,
+        format: undefined,
+        phrase: undefined,
+        value: undefined,
+        css: '',
+        type: 'text',
+        input: 'radio',
+        name: 'hasDonation',
+        options: [
+          {
+            label: "True",
+            value: true
+          },
+          {
+            label: "False",
+            value: false
+          }
+        ]
+      }];
 
-    //   const expected = [{}];
-
-    //   expectToEqual(actual, expected);
-    // });
+      expectToEqual(actual, expected);
+    });
 
 
     it('simple text field', () => {
@@ -466,6 +475,7 @@ describe('Schema Parser', () => {
         label: 'Name',
         prop: 'name',
         placeholder: false,
+        prefix: null,
         help: false,
         multiple: false,
         required: true,
@@ -506,6 +516,7 @@ describe('Schema Parser', () => {
         disabled: false,
         value: undefined,
         placeholder: false,
+        prefix: null,
         help: false,
         multiple: false,
         required: false,
@@ -521,6 +532,7 @@ describe('Schema Parser', () => {
           disabled: false,
           value: undefined,
           placeholder: false,
+          prefix: null,
           help: false,
           format: undefined,
           phrase: undefined,
@@ -558,6 +570,7 @@ describe('Schema Parser', () => {
         disabled: false,
         value: undefined,
         placeholder: false,
+        prefix: null,
         help: false,
         multiple: false,
         required: false,
@@ -573,6 +586,7 @@ describe('Schema Parser', () => {
           disabled: false,
           value: undefined,
           placeholder: false,
+          prefix: null,
           format: undefined,
           phrase: undefined,
           help: false,
@@ -620,6 +634,7 @@ describe('Schema Parser', () => {
         disabled: false,
         value: undefined,
         placeholder: false,
+        prefix: null,
         help: false,
         multiple: false,
         required: false,
@@ -668,6 +683,7 @@ describe('Schema Parser', () => {
         label: 'Tags',
         prop: 'tags',
         placeholder: false,
+        prefix: null,
         help: false,
         multiple: true,
         required: false,
@@ -686,7 +702,7 @@ describe('Schema Parser', () => {
       expectToEqual(actual, expected);
     });
 
-    it.skip('multiple with multiple fields', () => {
+    it('multiple with multiple fields', () => {
       const actual = toFields({
         comments: [{
           user: 'text',
@@ -706,8 +722,9 @@ describe('Schema Parser', () => {
             prop: 'user',
             pattern: null,
             placeholder: false,
+            prefix: null,
             css: '',
-            name: 'comments[][user]',
+            name: 'comments.user',
             required: false,
             disabled: false,
             format: undefined,
@@ -732,7 +749,8 @@ describe('Schema Parser', () => {
             css: '',
             pattern: null,
             placeholder: false,
-            name: 'comments[][date]',
+            prefix: null,
+            name: 'comments.date',
             disabled: false,
             format: undefined,
             phrase: undefined,
@@ -758,7 +776,9 @@ describe('Schema Parser', () => {
             phrase: undefined,
             prop: 'comment',
             placeholder: false,
-            name: 'comments[][comment]',
+            prefix: null,
+            name: 'comments.comment',
+            pattern: null,
             required: false,
             type: 'text'
           }
@@ -775,6 +795,7 @@ describe('Schema Parser', () => {
         value: undefined,
         pattern: null,
         placeholder: false,
+        prefix: null,
         required: false,
         input: 'fieldset'
       }];
