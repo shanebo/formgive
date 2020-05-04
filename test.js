@@ -785,8 +785,7 @@ describe('Schema Parser', () => {
             format: undefined,
             phrase: undefined,
             prop: 'comment',
-            pattern: 'markdown validator',
-            placeholder: 'Enter markdown',
+            placeholder: false,
             name: 'comments[][comment]',
             required: false,
             type: 'text'
