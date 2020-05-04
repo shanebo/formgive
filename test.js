@@ -719,7 +719,7 @@ describe('Schema Parser', () => {
         comments: [{
           user: 'text',
           date: 'text',
-          comment: 'markdown'
+          comment: 'textarea'
         }]
       });
 
@@ -775,7 +775,7 @@ describe('Schema Parser', () => {
           },
           {
             help: false,
-            input: 'markdown',
+            input: 'textarea',
             label: 'Comment',
             model: false,
             multiple: false,
@@ -826,12 +826,12 @@ describe('Schema Parser', () => {
       id: 'Person',
       fields: toFields({
         title: 'text',
-        body: 'markdown',
+        body: 'textarea',
         comments: [
           {
             user: 'text',
             date: 'text',
-            comment: 'markdown'
+            comment: 'textarea'
           }
         ]
       })
