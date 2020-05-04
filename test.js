@@ -332,7 +332,7 @@ describe('Schema Parser', () => {
 
     it('disabled text field', () => {
       const actual = toFields({
-        status: '×*text@Donation'
+        status: '!*text@Donation'
       });
 
       expect(actual[0]).to.containSubset({
