@@ -69,65 +69,12 @@ const baseField = (prop) => ({
   });
 
 
-// const expandShorthand = (str) => {
-//   const regex = /(\*)?([^\:!*]+)(\*)?((?:\:|!)[^\:!*]+)?(\*)?((?:\:|!)[^\:!*]+)?(\*)?$/g;
-//   const matches = regex.exec(str).filter(match => match);
-//   matches.shift();
-
-//   const field = matches.map(match => {
-//     const paramType = match.charAt(0);
-//     const param = match.replace(/[@!!\*]/gi, '');
-
-//     console.log('\n\n');
-//     console.log({match});
-//     console.log({param});
-//     console.log({paramType});
-
-
-//     // const param = SHORTHAND_PARAMS.reduce((match, str) => match.replace(str, ''));
-
-//     if (paramType === '*') {
-//       return {
-//         required: true
-//       };
-//     } else if (paramType === '!') {
-//       return {
-//         disabled: true
-//       };
-//     } else if (paramType === '@') {
-//       return {
-//         input: 'select',
-//         type: 'relationship',
-//         model: param
-//       };
-//     } else if (!SHORTHAND_PARAMS.includes(paramType)) {
-//       return INPUT_TABLE[param];
-//     }
-
-//     return {
-//       [SHORTHAND_FLAGS[paramType]]: param
-//     };
-//   });
-
-//   return Object.assign({}, ...field);
-// }
-
-
-
-
-
-
-
-
 const expandShorthand = (str) => {
   const field = {};
   const input = str.replace(/\*|!|([@:][a-zA-Z]*)/g, (match) => {
     const matchSetting = SHORTHAND_FLAGS[match];
     Object.assign(field, matchSetting);
     if (!matchSetting) {
-
-      console.log('match.substr(1)');
-      console.log(match.substr(1));
       Object.assign(field, SHORTHAND_FLAGS[match.charAt(0)](match.substr(1)));
     }
     return '';
@@ -135,75 +82,6 @@ const expandShorthand = (str) => {
 
   return Object.assign(field, INPUT_TABLE[input]);
 }
-
-
-
-// const expandShorthand = (str) => {
-//   const fielder = {};
-//   const input = str.replace(/\*|!|([@:][a-zA-Z]*)/g, (flag, prop) => {
-//     if (prop) {
-//       const type = prop.charAt(0);
-//       const val = prop.substr(1);
-//       if (type === '@') {
-//         Object.assign(fielder, {
-//           _type: 'relationship',
-//           _model: val
-//         });
-//       }
-//     } else {
-//       Object.assign(fielder, SHORTHAND_FLAGS[flag]);
-//     }
-
-//     console.log({ flag });
-//     console.log({ prop });
-
-//     return '';
-//   });
-
-//   if (input) {
-//     Object.assign(fielder, INPUT_TABLE[input]);
-//   }
-//   // console.log({ fielder });
-//   return fielder;
-// }
-
-
-
-
-
-
-// const expandShorthand = (str) => {
-//   const regex = /(\*)?([^\:!*]+)(\*)?((?:\:|!)[^\:!*]+)?(\*)?((?:\:|!)[^\:!*]+)?(\*)?$/g;
-//   const matches = regex.exec(str).filter(match => match);
-//   matches.shift();
-
-//   const field = matches.map(match => {
-//     const paramType = match.charAt(0);
-//     const param = match.replace(/[@!!\*]/gi, '');
-//     return {
-//       ...(paramType === '*' && {
-//         required: true
-//       }),
-//       ...(paramType === '!' && {
-//         disabled: true
-//       }),
-//       ...(paramType === '@' && {
-//         input: 'select',
-//         type: 'relationship',
-//         model: param
-//       }),
-//       ...(!SHORTHAND_PARAMS.includes(paramType) &&
-//         INPUT_TABLE[param]
-//       )
-//       };
-//   });
-
-//   return Object.assign({}, ...field);
-// }
-
-
-
-
 
 
 const createField = (prop, setting) => {
@@ -240,8 +118,6 @@ const toField = (prop, setting) => ({
   ...baseField(prop),
   ...createField(prop, setting)
 });
-
-
 
 
 const removeMetaPropUnderscores = (field) => {
@@ -315,25 +191,7 @@ const toFields = (schema, doc) => {
   return addParamNames(cleanedFields);
 }
 
-
-// const toFields = (schema) => {
-//   const fields = getNonMetaProps(schema).map((prop) => toField(prop, schema[prop]));
-//   const cleanedFields = fields.map(removeMetaPropUnderscores);
-//   return addParamNames(cleanedFields);
-// }
-
-
-
-
-
-
-
 const getParamName = (field, parent) => {
-  // console.log({ parent });
-  // console.log('\n\n');
-  // console.log({ prop: field.prop });
-  // console.log({ multiple: field.multiple });
-
   return field.multiple
     ? field.prop
     : parent && parent.children && parent.prop !== 'fieldset'
@@ -344,11 +202,6 @@ const getParamName = (field, parent) => {
 }
 
 const getOldSchoolParamName = (field, parent) => {
-  // console.log({ parent });
-  // console.log('\n\n');
-  // console.log({ prop: field.prop });
-  // console.log({ multiple: field.multiple });
-
   return field.multiple
     ? `${field.prop}[]`
     : parent && parent.children && parent.prop !== 'fieldset'
@@ -358,15 +211,10 @@ const getOldSchoolParamName = (field, parent) => {
         : field.prop;
 }
 
-
-
-
 const addParamNames = (fields) => {
   const populate = (arr, parent = null, paramLayer = '') => {
     return arr.map(field => {
       if (field.children) {
-        // console.log('i have children');
-        // console.log({ paramLayer });
         field.children = populate(field.children, field, paramLayer + getParamName(field, parent));
       } else {
         field.name = paramLayer + getParamName(field, parent);
@@ -387,7 +235,6 @@ const mapFieldValues = (fields, doc) => {
     const item = typeOf(doc) === 'object' ? doc[prop] : '';
 
     if (children && multiple) {
-      // console.log({ item });
       const len = item.length;
       const values = [];
       for (let index = 0; index < len; index++) {
@@ -414,12 +261,6 @@ const mapFieldValues = (fields, doc) => {
         obj.value = value;
         return obj;
       });
-
-      // console.log('IN multiple');
-      // console.log('\n\n\n');
-      // console.log('field.values');
-      // console.log(field.values);
-
     } else {
       // string
       field.value = item;
@@ -428,9 +269,6 @@ const mapFieldValues = (fields, doc) => {
     return field;
   });
 }
-
-
-
 
 const toBase = (type, fields) => {
   const base = {
@@ -452,8 +290,6 @@ const toBase = (type, fields) => {
   walk(fields, base);
   return base;
 }
-
-
 
 const isValue = (val) => ![undefined, null, ''].includes(val);
 

@@ -1,6 +1,3 @@
-// const { expect } = require('chai');
-// const { toFields, mapFieldValues } = require('./schema');
-
 const chai = require('chai');
 const chaiSubset = require('chai-subset');
 chai.use(chaiSubset);
@@ -8,22 +5,9 @@ chai.use(chaiSubset);
 const { expect } = chai;
 const { toFields, mapFieldValues, toSentence } = require('./schema');
 
-// const { toBase, toValidDoc } = require('../app/subapps/hub/validator');
-// const { arrayToObject } = require('../app/helpers');
-
-
 const expectToEqual = (actual, expected) => {
-  // console.log('\n\n\n\n');
-  // console.log(actual);
   expect(actual).to.deep.equal(expected);
 }
-
-
-
-
-
-
-
 
 describe('Hydrated fields', () => {
   it('Simple hydration of multiple field', () => {
@@ -46,8 +30,6 @@ describe('Hydrated fields', () => {
         }
       ]
     });
-
-    console.log(actual[1].values);
 
     expect(actual[1].values).to.deep.includes({
       values: [
@@ -79,8 +61,6 @@ describe('Hydrated fields', () => {
       }
     });
 
-    console.log(actual[0].children);
-
     expect(actual[0].children[0]).to.deep.includes({
       value: '123 Sesame street'
     });
@@ -111,14 +91,6 @@ describe('Hydrated fields', () => {
     });
   });
 });
-
-
-
-
-
-
-
-
 
 describe('To sentence', () => {
 
