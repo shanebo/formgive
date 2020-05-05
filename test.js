@@ -3,7 +3,7 @@ const chaiSubset = require('chai-subset');
 chai.use(chaiSubset);
 
 const { expect } = chai;
-const { toFields, mapFieldValues, toSentence } = require('./schema');
+const { toFields, mapFieldValues, toSentence, toBase } = require('./lib');
 
 const expectToEqual = (actual, expected) => {
   expect(actual).to.deep.equal(expected);
