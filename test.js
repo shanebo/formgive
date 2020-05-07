@@ -67,6 +67,80 @@ describe('Hydrated fields', () => {
       value: 'Joe Osburn'
     });
   });
+  describe('errors', () => {
+    it('hydrates errors on simple fields', () => {
+      const actual = toFields({
+        name: 'text',
+        email: 'text',
+        address: {
+          street: 'text'
+        }
+      }, {
+        name: 'Joe Osburn'
+      },
+      [
+        {
+          "message": "Argument 'email' on InputObject 'AccountInput' is required. Expected type String!",
+          "extensions": {
+            "dotPath": "mutation.createAccount.input.email"
+          }
+        }
+      ]);
+
+      expect(actual[1].error).to.equal("Argument 'email' on InputObject 'AccountInput' is required. Expected type String!");
+    });
+
+    it('hydrates errors on multiple fields', () => {
+      const actual = toFields({
+        type: 'text',
+        tags: [{
+          name: 'text'
+        }]
+      }, {
+        type: 'RESOURCE',
+        tags: [
+          {
+            name: 'theology'
+          },
+          {
+            name: ""
+          }
+        ]
+      },
+      [
+        {
+          "message": "Argument 'tag.name' on InputObject 'createTag' is too short. Expected a minimun length of 1.",
+          "extensions": {
+            "dotPath": "mutation.createTag.input.tags[1].name"
+          }
+        }
+      ]);
+
+      expect(actual[1].values[1][0].error).to.equal("Argument 'tag.name' on InputObject 'createTag' is too short. Expected a minimun length of 1.");
+    });
+
+    it('hydrates errors on nested fields', () => {
+      const actual = toFields({
+        address: {
+          street: 'text'
+        }
+      }, {
+        address: {
+          street: ''
+        }
+      },
+      [
+        {
+          "message": "Argument 'address.street' on InputObject 'createAddressInput' is required. Expected type String!",
+          "extensions": {
+            "dotPath": "mutation.createAddressInput.input.address.street"
+          }
+        }
+      ]);
+
+      expect(actual[0].children[0].error).to.equal("Argument 'address.street' on InputObject 'createAddressInput' is required. Expected type String!");
+    });
+  });
 });
 
 describe('toSentence', () => {
