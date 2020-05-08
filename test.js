@@ -9,6 +9,46 @@ const expectToEqual = (actual, expected) => {
   expect(actual).to.deep.equal(expected);
 }
 
+
+
+
+
+
+
+
+describe('Parse schema', () => {
+  it.only('Expand shorthand', () => {
+    const actual = toFields({
+      name: 'text',
+      email: 'email',
+      uno: {
+        dos: {
+          tres: 'text'
+        }
+      },
+      amount: 'currencyRange'
+    }, {
+      name: 'Jack Black',
+      email: 'jack@nacho.com'
+    });
+
+    console.log(JSON.stringify(actual, null, 2));
+
+
+    // const values = actual[1].values.map((obj) => obj[0].value);
+    // expect(values).to.eql();
+  });
+});
+
+
+
+
+
+
+
+
+
+
 describe('Hydrated fields', () => {
   it('Simple hydration of multiple field', () => {
     const actual = toFields({
@@ -888,20 +928,20 @@ describe('Schema Parser', () => {
   //  [ { user: 'shanebo', date: 'today', comment: 'comment goes here' } ] }
 
 
-  const model = {
-      id: 'Person',
-      fields: toFields({
-        title: 'text',
-        body: 'textarea',
-        comments: [
-          {
-            user: 'text',
-            date: 'text',
-            comment: 'textarea'
-          }
-        ]
-      })
-    };
+  // const model = {
+  //     id: 'Person',
+  //     fields: toFields({
+  //       title: 'text',
+  //       body: 'textarea',
+  //       comments: [
+  //         {
+  //           user: 'text',
+  //           date: 'text',
+  //           comment: 'textarea'
+  //         }
+  //       ]
+  //     })
+  //   };
 
     // it.only('first pass', () => {
     //   const udoc = {
