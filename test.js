@@ -19,6 +19,9 @@ const expectToEqual = (actual, expected) => {
 describe('Parse schema', () => {
   it.only('Expand shorthand', () => {
     const actual = toFields({
+      foo: {
+        _input: 'hola'
+      },
       name: 'text',
       email: 'email',
       uno: {
@@ -29,10 +32,29 @@ describe('Parse schema', () => {
       amount: 'currencyRange'
     }, {
       name: 'Jack Black',
-      email: 'jack@nacho.com'
+      email: 'jack@nacho.com',
+      uno: {
+        dos: {
+          tres: 'nachooooooooooo'
+        }
+      },
+      amount: {
+        min: '$10.00',
+        max: '$5,000.00',
+        uno: {
+          dos: {
+            tres: 'tres is number three'
+          }
+        }
+      }
     });
 
-    console.log(JSON.stringify(actual, null, 2));
+    console.log(actual);
+
+    console.log('\n\n\n');
+    console.log('toSentence');
+    console.log(toSentence(actual));
+    // console.log(JSON.stringify(actual, null, 2));
 
 
     // const values = actual[1].values.map((obj) => obj[0].value);
