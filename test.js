@@ -60,6 +60,31 @@ describe('Parse schema', () => {
     // const values = actual[1].values.map((obj) => obj[0].value);
     // expect(values).to.eql();
   });
+
+  it.only('Simple hydration of multiple field', () => {
+    const actual = toFields({
+      type: 'text',
+      tags: [{
+        name: 'text'
+      }]
+    }, {
+      type: 'RESOURCE',
+      tags: [
+        {
+          name: 'theology'
+        },
+        {
+          name: 'practice'
+        },
+        {
+          name: 'application'
+        }
+      ]
+    });
+
+    const values = actual.tags.map((tag) => tag.name._value);
+    expect(values).to.eql([ 'theology', 'practice', 'application' ]);
+  });
 });
 
 
