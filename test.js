@@ -160,6 +160,32 @@ describe.only('Parse schema', () => {
 
     expect(actual.tags[1].name._error).to.equal("Argument 'tag.name' on InputObject 'createTag' is too short. Expected a minimun length of 1.");
   });
+
+  it('handles select fields', () => {
+    const actual = toFields({
+      state: {
+        _options: [
+          {
+            label: 'Texas',
+            value: '0'
+          },
+          {
+            label: 'Minnesota',
+            value: '1'
+          },
+          {
+            label: 'New York',
+            value: '2'
+          }
+        ]
+      }
+    },
+    {
+      state: '1'
+    });
+
+    expect(actual.state._options[1].selected).to.be.true;
+  });
 });
 
 
