@@ -16,8 +16,8 @@ const expectToEqual = (actual, expected) => {
 
 
 
-describe('Parse schema', () => {
-  it.only('Expand shorthand', () => {
+describe.only('Parse schema', () => {
+  it('Expand shorthand', () => {
     const actual = toFields({
       foo: {
         _input: 'hola'
@@ -59,6 +59,132 @@ describe('Parse schema', () => {
 
     // const values = actual[1].values.map((obj) => obj[0].value);
     // expect(values).to.eql();
+  });
+
+  it('Simple hydration of multiple field', () => {
+    const actual = toFields({
+      type: 'text',
+      tags: [{
+        name: 'text'
+      }]
+    }, {
+      type: 'RESOURCE',
+      tags: [
+        {
+          name: 'theology'
+        },
+        {
+          name: 'practice'
+        },
+        {
+          name: 'application'
+        }
+      ]
+    });
+
+    const values = actual.tags.map((tag) => tag.name._value);
+    expect(values).to.eql([ 'theology', 'practice', 'application' ]);
+  });
+
+  it('handles simple errors', () => {
+    const actual = toFields({
+      name: 'text',
+      email: 'text',
+      address: {
+        street: 'text'
+      }
+    }, {
+      name: 'Joe Osburn'
+    },
+    [
+      {
+        "message": "Argument 'email' on InputObject 'AccountInput' is required. Expected type String!",
+        "extensions": {
+          "dotPath": "mutation.createAccount.input.email"
+        }
+      }
+    ]);
+
+    expect(actual.email._error).to.equal("Argument 'email' on InputObject 'AccountInput' is required. Expected type String!");
+  });
+
+  it('hydrates errors on nested fields', () => {
+    const actual = toFields({
+      address: {
+        street: 'text'
+      }
+    }, {
+      address: {
+        street: ''
+      }
+    },
+    [
+      {
+        "message": "Argument 'address.street' on InputObject 'createAddressInput' is required. Expected type String!",
+        "extensions": {
+          "dotPath": "mutation.createAddressInput.input.address.street"
+        }
+      }
+    ]);
+
+    expect(actual.address.street._error).to.equal("Argument 'address.street' on InputObject 'createAddressInput' is required. Expected type String!");
+  });
+
+
+
+  it('hydrates errors on multiple fields', () => {
+    const actual = toFields({
+      type: 'text',
+      tags: [{
+        name: 'text'
+      }]
+    }, {
+      type: 'RESOURCE',
+      tags: [
+        {
+          name: 'theology'
+        },
+        {
+          name: ""
+        }
+      ]
+    },
+    [
+      {
+        "message": "Argument 'tag.name' on InputObject 'createTag' is too short. Expected a minimun length of 1.",
+        "extensions": {
+          "dotPath": "mutation.createTag.input.tags[1].name"
+        }
+      }
+    ]);
+
+    expect(actual.tags[1].name._error).to.equal("Argument 'tag.name' on InputObject 'createTag' is too short. Expected a minimun length of 1.");
+  });
+
+  it('handles select fields', () => {
+    const actual = toFields({
+      state: {
+        _options: [
+          {
+            label: 'Texas',
+            value: '0'
+          },
+          {
+            label: 'Minnesota',
+            value: '1'
+          },
+          {
+            label: 'New York',
+            value: '2'
+          }
+        ]
+      }
+    },
+    {
+      state: '1'
+    });
+
+    expect(actual.state._options[1].selected).to.be.true;
   });
 });
 
