@@ -9,13 +9,6 @@ const expectToEqual = (actual, expected) => {
   expect(actual).to.deep.equal(expected);
 }
 
-
-
-
-
-
-
-
 describe.only('Parse schema', () => {
   it('Expand shorthand', () => {
     const actual = toFields({
@@ -483,7 +476,7 @@ describe('Schema Parser', () => {
 
       const expected = [{
         label: 'Name',
-        prop: 'name',
+        key: 'name',
         placeholder: false,
         prefix: null,
         help: false,
@@ -516,7 +509,7 @@ describe('Schema Parser', () => {
 
       const expected = [{
         label: 'Email',
-        prop: 'email',
+        key: 'email',
         placeholder: false,
         prefix: null,
         help: false,
@@ -560,7 +553,7 @@ describe('Schema Parser', () => {
 
       const expected = [{
         label: 'Author',
-        prop: 'author',
+        key: 'author',
         placeholder: false,
         prefix: null,
         help: false,
@@ -588,7 +581,7 @@ describe('Schema Parser', () => {
 
       const expected = [{
         label: 'Website',
-        prop: 'website',
+        key: 'website',
         placeholder: false,
         prefix: null,
         help: false,
@@ -616,7 +609,7 @@ describe('Schema Parser', () => {
 
       const expected = [{
         label: 'Tags',
-        prop: 'tags',
+        key: 'tags',
         placeholder: false,
         prefix: null,
         help: false,
@@ -646,7 +639,7 @@ describe('Schema Parser', () => {
 
       const expected = [{
         label: 'Member',
-        prop: 'member',
+        key: 'member',
         placeholder: false,
         prefix: null,
         help: false,
@@ -673,7 +666,7 @@ describe('Schema Parser', () => {
     it('radio', () => {
       const actual = toFields({
         hasDonation: {
-          '_prop': 'hasDonation',
+          '_key': 'hasDonation',
           '_label': 'Donor',
           '_input': 'radio',
           '_options': [
@@ -691,7 +684,7 @@ describe('Schema Parser', () => {
 
       const expected = [{
         label: 'Donor',
-        prop: 'hasDonation',
+        key: 'hasDonation',
         placeholder: false,
         prefix: null,
         help: false,
@@ -735,7 +728,7 @@ describe('Schema Parser', () => {
 
       const expected = [{
         label: 'Name',
-        prop: 'name',
+        key: 'name',
         placeholder: false,
         prefix: null,
         help: false,
@@ -787,7 +780,7 @@ describe('Schema Parser', () => {
         phrase: undefined,
         model: false,
         label: 'Theme',
-        prop: 'theme',
+        key: 'theme',
         input: 'fieldset',
         children: [{
           css: '',
@@ -806,7 +799,7 @@ describe('Schema Parser', () => {
           type: 'text',
           input: 'color',
           name: 'theme.color',
-          prop: 'color'
+          key: 'color'
         }]
       }];
 
@@ -842,7 +835,7 @@ describe('Schema Parser', () => {
         model: false,
         label: 'Theme',
         input: 'fieldset',
-        prop: 'theme',
+        key: 'theme',
         children: [{
           css: '',
           disabled: false,
@@ -860,7 +853,7 @@ describe('Schema Parser', () => {
           type: 'text',
           input: 'color',
           name: 'theme.color',
-          prop: 'color'
+          key: 'color'
         }]
       }];
 
@@ -908,7 +901,7 @@ describe('Schema Parser', () => {
         name: 'title',
         input: 'select',
         type: 'number',
-        prop: 'title',
+        key: 'title',
         options: [
           {
             label: 'Mr.',
@@ -943,7 +936,7 @@ describe('Schema Parser', () => {
 
       const expected = [{
         label: 'Tags',
-        prop: 'tags',
+        key: 'tags',
         placeholder: false,
         prefix: null,
         help: false,
@@ -981,7 +974,7 @@ describe('Schema Parser', () => {
             label: 'User',
             model: false,
             multiple: false,
-            prop: 'user',
+            key: 'user',
             pattern: null,
             placeholder: false,
             prefix: null,
@@ -1007,7 +1000,7 @@ describe('Schema Parser', () => {
             label: 'Date',
             model: false,
             multiple: false,
-            prop: 'date',
+            key: 'date',
             css: '',
             pattern: null,
             placeholder: false,
@@ -1036,7 +1029,7 @@ describe('Schema Parser', () => {
             value: undefined,
             format: undefined,
             phrase: undefined,
-            prop: 'comment',
+            key: 'comment',
             placeholder: false,
             prefix: null,
             name: 'comments.comment',
@@ -1049,7 +1042,7 @@ describe('Schema Parser', () => {
         label: 'Comments',
         model: false,
         multiple: true,
-        prop: 'comments',
+        key: 'comments',
         format: undefined,
         phrase: undefined,
         disabled: false,
