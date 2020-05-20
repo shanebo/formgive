@@ -3,7 +3,7 @@ const chaiSubset = require('chai-subset');
 chai.use(chaiSubset);
 
 const { expect } = chai;
-const { toFields, mapFieldValues, toSentence } = require('./lib');
+const { toFields, mapFieldValues, toSentence, toHydratedFields } = require('./lib');
 
 const expectToEqual = (actual, expected) => {
   expect(actual).to.deep.equal(expected);
@@ -12,6 +12,7 @@ const expectToEqual = (actual, expected) => {
 describe.only('Parse schema', () => {
   it('Expand shorthand', () => {
     const actual = toFields({
+      joe: '*name',
       foo: {
         _input: 'hola'
       },
@@ -75,7 +76,7 @@ describe.only('Parse schema', () => {
       ]
     });
 
-    const values = actual.tags.map((tag) => tag.name._value);
+    const values = actual.tags.map((tag) => tag.name._attributes.value);
     expect(values).to.eql([ 'theology', 'practice', 'application' ]);
   });
 
@@ -179,6 +180,141 @@ describe.only('Parse schema', () => {
 
     expect(actual.state._options[1].selected).to.be.true;
   });
+
+
+
+  it('Expand shorthand', () => {
+    const actual = toFields({
+      state: {
+        _options: [
+          {
+            label: 'Texas',
+            value: '0'
+          },
+          {
+            label: 'Minnesota',
+            value: '1'
+          },
+          {
+            label: 'New York',
+            value: '2'
+          }
+        ]
+      }
+    },
+    {
+      state: '1'
+    });
+
+    console.log(actual);
+    // console.log(JSON.stringify(actual, null, 2));
+
+
+    // const values = actual[1].values.map((obj) => obj[0].value);
+    // expect(values).to.eql();
+  });
+
+  it('Expand shorthand', () => {
+    const actual = toFields({
+      joe: '*name',
+      foo: {
+        _input: 'hola'
+      },
+      name: 'text',
+      email: 'email',
+      uno: {
+        dos: {
+          tres: 'text'
+        }
+      },
+      amount: 'currencyRange',
+      date: 'dateRange'
+    },
+    {
+      name: 'Jack Black',
+      email: 'jack@nacho.com',
+      uno: {
+        dos: {
+          tres: 'nachooooooooooo'
+        }
+      },
+      amount: {
+        min: '$10.00',
+        max: '$5,000.00',
+        uno: {
+          dos: {
+            tres: 'tres is number three'
+          }
+        }
+      },
+      date: {
+        key: 'TODAY'
+      }
+    });
+
+    // console.log(actual);
+    console.log(JSON.stringify(actual, null, 2));
+
+
+    // const values = actual[1].values.map((obj) => obj[0].value);
+    // expect(values).to.eql();
+  });
+
+
+  it.only('Expand shorthand', () => {
+    const actual = toFields({
+      joe: '*name',
+      foo: {
+        _input: 'hola'
+      },
+      name: 'text',
+      email: 'email',
+      uno: {
+        dos: {
+          tres: 'text'
+        }
+      },
+      amount: 'currencyRange',
+      date: 'dateRange'
+    },
+    {
+      name: 'Jack Black',
+      email: 'jack@nacho.com',
+      uno: {
+        dos: {
+          tres: 'nachooooooooooo'
+        }
+      },
+      amount: {
+        min: 100,
+        max: 5000,
+        uno: {
+          dos: {
+            tres: 'tres is number three'
+          }
+        }
+      },
+      date: {
+        key: 'TODAY',
+        start: new Date()
+      }
+    });
+
+    console.log(toHydratedFields(actual));
+
+    console.log(toSentence(actual));
+
+
+    // console.log(actual);
+    // console.log(JSON.stringify(actual, null, 2));
+
+
+    // const values = actual[1].values.map((obj) => obj[0].value);
+    // expect(values).to.eql();
+  });
+
+
+
 });
 
 
