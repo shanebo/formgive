@@ -9,7 +9,7 @@ const expectToEqual = (actual, expected) => {
   expect(actual).to.deep.equal(expected);
 }
 
-describe.only('Parse schema', () => {
+describe('Parse schema', () => {
   it('Expand shorthand', () => {
     const actual = toFields({
       joe: '*name',
@@ -58,26 +58,52 @@ describe.only('Parse schema', () => {
   it('Simple hydration of multiple field', () => {
     const actual = toFields({
       type: 'text',
-      tags: [{
-        name: 'text'
-      }]
+      foo: {
+        tags: [{
+          name: 'text',
+          color: 'text'
+        }]
+      }
     }, {
       type: 'RESOURCE',
-      tags: [
-        {
-          name: 'theology'
-        },
-        {
-          name: 'practice'
-        },
-        {
-          name: 'application'
-        }
-      ]
+      foo: {
+          tags: [
+          {
+            name: 'theology'
+          },
+          {
+            name: 'practice'
+          },
+          {
+            name: 'application'
+          }
+        ]
+      }
     });
 
-    const values = actual.tags.map((tag) => tag.name._attributes.value);
+    console.log(JSON.stringify(actual, null, 2));
+
+    const values = actual.foo.tags.map((tag) => tag.name._attributes.value);
     expect(values).to.eql([ 'theology', 'practice', 'application' ]);
+  });
+
+  it('Simple fail hydration of multiple field', () => {
+    const actual = toFields({
+      type: 'text',
+      foo: {
+        tags: [{
+          name: 'text',
+          color: 'text'
+        }]
+      }
+    }, {
+      type: 'RESOURCE'
+    });
+
+    console.log(JSON.stringify(actual, null, 2));
+
+    // const values = actual.foo.tags.map((tag) => tag.name._attributes.value);
+    // expect(values).to.eql([ 'theology', 'practice', 'application' ]);
   });
 
   it('handles simple errors', () => {
@@ -126,7 +152,7 @@ describe.only('Parse schema', () => {
 
 
 
-  it('hydrates errors on multiple fields', () => {
+  it.skip('hydrates errors on multiple fields', () => {
     const actual = toFields({
       type: 'text',
       tags: [{
@@ -177,6 +203,8 @@ describe.only('Parse schema', () => {
     {
       state: '1'
     });
+
+    console.log(JSON.stringify(actual, null, 2));
 
     expect(actual.state._options[1].selected).to.be.true;
   });
@@ -261,7 +289,7 @@ describe.only('Parse schema', () => {
   });
 
 
-  it.only('Expand shorthand', () => {
+  it('Expand shorthand', () => {
     const actual = toFields({
       joe: '*name',
       foo: {
@@ -317,6 +345,55 @@ describe.only('Parse schema', () => {
 
 });
 
+describe('toHydratedFields', () => {
+  it.only('hydrates fields', () => {
+    const actual = toFields({
+      joe: '*name',
+      foo: {
+        _input: 'hola'
+      },
+      name: 'text',
+      email: 'email',
+      uno: {
+        dos: {
+          tres: 'text'
+        }
+      },
+      amount: 'currencyRange',
+      date: 'dateRange'
+    },
+    {
+      name: 'Jack Black',
+      email: 'jack@nacho.com',
+      uno: {
+        dos: {
+          tres: 'nachooooooooooo'
+        }
+      },
+      amount: {
+        min: 100,
+        max: 5000,
+        uno: {
+          dos: {
+            tres: 'tres is number three'
+          }
+        }
+      },
+      date: {
+        key: 'TODAY',
+        start: new Date()
+      }
+    });
+
+    console.log(toHydratedFields(actual));
+
+    expect(actual[0]).to.eql({
+      key: 'Name',
+      value: 'Jack Black',
+      name: 'name'
+    })
+  });
+});
 
 
 
@@ -326,7 +403,8 @@ describe.only('Parse schema', () => {
 
 
 
-describe('Hydrated fields', () => {
+
+describe.skip('Hydrated fields', () => {
   it('Simple hydration of multiple field', () => {
     const actual = toFields({
       type: 'text',
@@ -460,7 +538,7 @@ describe('Hydrated fields', () => {
   });
 });
 
-describe('toSentence', () => {
+describe.skip('toSentence', () => {
   it('Sentence of values with currency', () => {
     const fields = toFields({
       amount: {
@@ -603,7 +681,7 @@ describe('toSentence', () => {
 
 });
 
-describe('Schema Parser', () => {
+describe.skip('Schema Parser', () => {
   describe('Shorthand', () => {
     it('simple text field', () => {
       const actual = toFields({
