@@ -3,13 +3,329 @@ const chaiSubset = require('chai-subset');
 chai.use(chaiSubset);
 
 const { expect } = chai;
-const { toFields, mapFieldValues, toSentence, toHydratedFields } = require('./lib');
+const { input, toFields, mapFieldValues, toSentence, toHydratedFields } = require('./lib');
 
 const expectToEqual = (actual, expected) => {
   expect(actual).to.deep.equal(expected);
 }
 
+
+const mockOptions = [
+  {
+    text: 'Texas',
+    value: 0
+  },
+  {
+    text: 'Minnesota',
+    value: 1
+  },
+  {
+    text: 'New York',
+    value: 2
+  }
+];
+
+
+
 describe('Parse schema', () => {
+  it('Expand def input', () => {
+    const actual = toFields({
+      gender: 'radio'
+    },
+    {
+    });
+
+    console.log(actual);
+
+    // console.log(JSON.stringify(actual, null, 2));
+    // expect(actual.gender._options).to.eql([
+    // ]);
+  });
+
+  // it.only('Select data structure', () => {
+  //   const actual = toFields({
+  //     gender: {
+  //       // _input: 'select:checkboxes',
+  //       // _type: 'checkbox',
+
+  //       // _input: 'select:switches',
+  //       // _type: 'switch',
+
+  //       // _input: 'select',
+  //       // _type: 'option',
+
+  //       _input: 'select:chips',
+  //       _type: 'chip',
+
+  //       // _input: 'select:chip',
+  //       // _type: 'chip',
+
+  //       // _input: 'select:radio',
+  //       // _type: 'radio',
+
+  //       _options: [
+  //         {
+  //           text: 'Male',
+  //           value: 'MALE',
+  //         },
+  //         {
+  //           text: 'Male',
+  //           value: 'MALE',
+  //         },
+  //         {
+  //           text: 'Male',
+  //           value: 'MALE',
+  //         }
+  //       ]
+  //     }
+  //   },
+  //   {
+  //     state: 1
+  //   });
+
+  //   // console.log(JSON.stringify(actual, null, 2));
+  //   expect(actual.gender._options).to.eql([
+  //   ]);
+  // });
+
+  it.only('Pick:switches data structure', () => {
+    const actual = toFields({
+        state: input('*pick:switches', mockOptions)
+      },
+      {
+        state: 1
+      }
+    );
+
+
+    // const actual = input('*pick:switches', mockOptions, {
+    //   state: 1
+    // });
+    //  toFields({
+    //   state: {
+    //     _input: '*pick:switches',
+    //     _options: mockOptions
+    //   }
+    // },
+    // {
+    //   state: 1
+    // });
+
+    console.log(JSON.stringify(actual.state._options, null, 2));
+
+    expect(actual.state).to.containSubset({
+      _attributes: {
+        required: true
+      }
+    });
+
+    expect(actual.state._options).to.containSubset([
+      {
+        "_type": "switch"
+      },
+      {
+        "_type": "switch"
+      },
+      {
+        "_type": "switch"
+      }
+    ]);
+  });
+
+
+  it('Pick:radio data structure', () => {
+    const actual = toFields({
+      state: {
+        _input: 'pick:radio',
+        _options: mockOptions
+      }
+    },
+    {
+      state: 1
+    });
+
+    console.log(JSON.stringify(actual.state._options, null, 2));
+
+    expect(actual.state._options).to.containSubset([
+      {
+        "_type": "radio"
+      },
+      {
+        "_type": "radio"
+      },
+      {
+        "_type": "radio"
+      }
+    ]);
+  });
+
+
+
+  it('Pick:chip data structure', () => {
+    const actual = toFields({
+      state: {
+        _input: 'pick:chip',
+        _options: mockOptions
+      }
+    },
+    {
+      state: 1
+    });
+
+    console.log(JSON.stringify(actual.state._options, null, 2));
+    expect(actual.state._options).to.eql([
+      {
+        "_key": "state",
+        "_label": "Texas",
+        "_help": null,
+        "_prefix": null,
+        "_format": null,
+        "_phrase": null,
+        "_attributes": {
+          "id": "state-0",
+          "required": false,
+          "disabled": false,
+          "value": 0,
+          "type": "checkbox",
+          "checked": false,
+          "tabindex": "0",
+          "name": "state"
+        },
+        "_input": "checkbox",
+        "_type": "chip"
+      },
+      {
+        "_key": "state",
+        "_label": "Minnesota",
+        "_help": null,
+        "_prefix": null,
+        "_format": null,
+        "_phrase": null,
+        "_attributes": {
+          "id": "state-1",
+          "required": false,
+          "disabled": false,
+          "value": 1,
+          "type": "checkbox",
+          "checked": true,
+          "tabindex": "0",
+          "name": "state",
+          "selected": true
+        },
+        "_input": "checkbox",
+        "_type": "chip"
+      },
+      {
+        "_key": "state",
+        "_label": "New York",
+        "_help": null,
+        "_prefix": null,
+        "_format": null,
+        "_phrase": null,
+        "_attributes": {
+          "id": "state-2",
+          "required": false,
+          "disabled": false,
+          "value": 2,
+          "type": "checkbox",
+          "checked": false,
+          "tabindex": "0",
+          "name": "state"
+        },
+        "_input": "checkbox",
+        "_type": "chip"
+      }
+    ]);
+  });
+
+  it('Select data structure', () => {
+    const actual = toFields({
+      state: {
+        _input: 'select',
+        _options: [
+          {
+            text: 'Texas',
+            value: 0
+          },
+          {
+            text: 'Minnesota',
+            value: 1
+          },
+          {
+            text: 'New York',
+            value: 2
+          }
+        ]
+      }
+    },
+    {
+      state: 1
+    });
+
+    console.log(JSON.stringify(actual.state._options, null, 2));
+    expect(actual.state._options).to.eql([
+      {
+        "_key": "state",
+        "_label": "Texas",
+        "_help": null,
+        "_prefix": null,
+        "_format": null,
+        "_phrase": null,
+        "_input": "option",
+        "_attributes": {
+          "id": "state-0",
+          "required": false,
+          "value": 0,
+          "selected": false,
+          "disabled": false,
+          "tabindex": "0",
+          "name": "state"
+        }
+      },
+      {
+        "_key": "state",
+        "_label": "Minnesota",
+        "_help": null,
+        "_prefix": null,
+        "_format": null,
+        "_phrase": null,
+        "_input": "option",
+        "_attributes": {
+          "id": "state-1",
+          "required": false,
+          "value": 1,
+          "selected": true,
+          "disabled": false,
+          "tabindex": "0",
+          "name": "state",
+          "checked": true
+        }
+      },
+      {
+        "_key": "state",
+        "_label": "New York",
+        "_help": null,
+        "_prefix": null,
+        "_format": null,
+        "_phrase": null,
+        "_input": "option",
+        "_attributes": {
+          "id": "state-2",
+          "required": false,
+          "value": 2,
+          "selected": false,
+          "disabled": false,
+          "tabindex": "0",
+          "name": "state"
+        }
+      }
+    ]);
+  });
+
+
+
+
+
   it('Expand shorthand', () => {
     const actual = toFields({
       joe: '*name',
@@ -184,29 +500,17 @@ describe('Parse schema', () => {
   it('handles select fields', () => {
     const actual = toFields({
       state: {
-        _options: [
-          {
-            label: 'Texas',
-            value: '0'
-          },
-          {
-            label: 'Minnesota',
-            value: '1'
-          },
-          {
-            label: 'New York',
-            value: '2'
-          }
-        ]
+        _input: 'select',
+        _options: mockOptions
       }
     },
     {
-      state: '1'
+      state: 1
     });
 
     console.log(JSON.stringify(actual, null, 2));
 
-    expect(actual.state._options[1].selected).to.be.true;
+    expect(actual.state._options[1]._attributes.selected).to.be.true;
   });
 
 
@@ -214,24 +518,12 @@ describe('Parse schema', () => {
   it('Expand shorthand', () => {
     const actual = toFields({
       state: {
-        _options: [
-          {
-            label: 'Texas',
-            value: '0'
-          },
-          {
-            label: 'Minnesota',
-            value: '1'
-          },
-          {
-            label: 'New York',
-            value: '2'
-          }
-        ]
+        _input: 'select',
+        _options: mockOptions
       }
     },
     {
-      state: '1'
+      state: 1
     });
 
     console.log(actual);
@@ -346,7 +638,7 @@ describe('Parse schema', () => {
 });
 
 describe('toHydratedFields', () => {
-  it.only('hydrates fields', () => {
+  it.skip('hydrates fields', () => {
     const actual = toFields({
       joe: '*name',
       foo: {
