@@ -472,6 +472,36 @@ describe('Schema parsing', () => {
       });
     });
 
+    it('handles nested fields', () => {
+      const actual = toFields({
+        'address.full': 'textarea'
+      });
+
+      expect(actual).to.eql({
+        'address.full': {
+          _attributes: {
+            autocapitalize: "off",
+            autocomplete: "off",
+            autocorrect: "off",
+            disabled: false,
+            id: 'address.full',
+            name: 'address.full',
+            required: false,
+            spellcheck: "false",
+            value: undefined,
+          },
+          _format: null,
+          _help: null,
+          _input: 'textarea',
+          _key: 'address.full',
+          _label: 'Address full',
+          _phrase: null,
+          _prefix: null,
+          _type: 'text'
+        }
+      });
+    });
+
     describe('selects', () => {
       it('handles default data structure', () => {
         const actual = toFields({
