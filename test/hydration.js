@@ -55,21 +55,24 @@ describe('toHydratedFields', () => {
         value: 'Jack Black',
         valueFormatted: 'Jack Black',
         valuePhrased: 'Jack Black',
-        name: 'name'
+        name: 'name',
+        hidden: undefined
       },
       {
         key: 'Email',
         value: 'jack@nacho.com',
         valueFormatted: 'jack@nacho.com',
         valuePhrased: 'jack@nacho.com',
-        name: 'email'
+        name: 'email',
+        hidden: undefined
       },
       {
         key: 'Tres',
         value: 'nachooooooooooo',
         valueFormatted: 'nachooooooooooo',
         valuePhrased: 'nachooooooooooo',
-        name: 'uno.dos.tres'
+        name: 'uno.dos.tres',
+        hidden: undefined
       },
       {
         key: 'Amount',
@@ -84,14 +87,16 @@ describe('toHydratedFields', () => {
         },
         valueFormatted: '$100.00–$5,000.00',
         valuePhrased: '$100.00–$5,000.00',
-        name: 'amount'
+        name: 'amount',
+        hidden: undefined
       },
       {
         key: 'Date',
         value: { key: 'TODAY', start: today },
         valueFormatted: 'Today',
         valuePhrased: 'Today',
-        name: 'date'
+        name: 'date',
+        hidden: undefined
       }
     ]);
   });

@@ -7,15 +7,15 @@ const { input, toFields } = require('../lib');
 
 const mockOptions = [
   {
-    text: 'Texas',
+    label: 'Texas',
     value: 0
   },
   {
-    text: 'Minnesota',
+    label: 'Minnesota',
     value: 1
   },
   {
-    text: 'New York',
+    label: 'New York',
     value: 2
   }
 ];
@@ -487,7 +487,7 @@ describe('Schema parsing', () => {
         expect(actual.state._options).to.eql([
           {
             _key: "state",
-            _label: "Texas",
+            _label: 'Texas',
             _help: null,
             _prefix: null,
             _format: null,
@@ -505,7 +505,7 @@ describe('Schema parsing', () => {
           },
           {
             _key: "state",
-            _label: "Minnesota",
+            _label: 'Minnesota',
             _help: null,
             _prefix: null,
             _format: null,
@@ -524,7 +524,7 @@ describe('Schema parsing', () => {
           },
           {
             _key: "state",
-            _label: "New York",
+            _label: 'New York',
             _help: null,
             _prefix: null,
             _format: null,
@@ -612,7 +612,7 @@ describe('Schema parsing', () => {
         expect(actual.state._options).to.eql([
           {
             _key: "state",
-            _label: "Texas",
+            _label: 'Texas',
             _help: null,
             _prefix: null,
             _format: null,
@@ -632,7 +632,7 @@ describe('Schema parsing', () => {
           },
           {
             _key: "state",
-            _label: "Minnesota",
+            _label: 'Minnesota',
             _help: null,
             _prefix: null,
             _format: null,
@@ -653,7 +653,7 @@ describe('Schema parsing', () => {
           },
           {
             _key: "state",
-            _label: "New York",
+            _label: 'New York',
             _help: null,
             _prefix: null,
             _format: null,
