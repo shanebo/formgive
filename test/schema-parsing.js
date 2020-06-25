@@ -37,7 +37,7 @@ describe('Schema parsing', () => {
         id: 'gender',
         required: false,
         disabled: false,
-        value: undefined,
+        value: 'on',
         name: 'gender',
         type: 'checkbox',
         checked: false
@@ -458,7 +458,7 @@ describe('Schema parsing', () => {
             name: 'member',
             required: false,
             type: 'checkbox',
-            value: undefined,
+            value: 'on',
           },
           _format: null,
           _help: null,
@@ -774,7 +774,7 @@ describe('Schema parsing', () => {
             id: 'hasDonation',
             required: false,
             disabled: false,
-            value: undefined,
+            value: 'on',
             type: 'checkbox',
             checked: false,
             name: 'hasDonation'

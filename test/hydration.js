@@ -169,6 +169,29 @@ describe('Hydating doc' , () => {
     });
   });
 
+  it('hydrates checkboxes', () => {
+    const actual = toFields({
+      help: 'switch',
+      foo: 'radio',
+      boo: 'chip',
+      gifts: {
+        _input: 'checkbox',
+        _attributes: {
+          value: 'true'
+        }
+      }
+    }, {
+      help: 'on',
+      boo: 'on',
+      gifts: 'true'
+    });
+
+    expect(actual.help._attributes.checked).to.equal(true);
+    expect(actual.foo._attributes.checked).to.equal(false);
+    expect(actual.boo._attributes.checked).to.equal(true);
+    expect(actual.gifts._attributes.checked).to.equal(true);
+  });
+
   describe('errors', () => {
     it('hydrates simple errors', () => {
       const actual = toFields({
