@@ -22,7 +22,19 @@ describe('toHydratedFields', () => {
         }
       },
       amount: 'currencyRange',
-      date: 'dateRange'
+      date: 'dateRange',
+      gifts: {
+        _input: 'checkbox',
+        _attributes: {
+          value: 'on'
+        }
+      },
+      help: {
+        _input: 'checkbox',
+        _attributes: {
+          value: 'on'
+        }
+      }
     },
     {
       name: 'Jack Black',
@@ -44,7 +56,8 @@ describe('toHydratedFields', () => {
       date: {
         key: 'TODAY',
         start: today
-      }
+      },
+      gifts: 'on'
     });
 
     const hydratedFields = toHydratedFields(actual);
@@ -97,6 +110,14 @@ describe('toHydratedFields', () => {
         valuePhrased: 'Today',
         name: 'date',
         hidden: undefined
+      },
+      {
+        hidden: undefined,
+        key: "Gifts",
+        name: "gifts",
+        value: "on",
+        valueFormatted: "on",
+        valuePhrased: "on"
       }
     ]);
   });
