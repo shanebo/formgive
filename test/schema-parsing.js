@@ -7,15 +7,15 @@ const { input, toFields } = require('../lib');
 
 const mockOptions = [
   {
-    text: 'Texas',
+    label: 'Texas',
     value: 0
   },
   {
-    text: 'Minnesota',
+    label: 'Minnesota',
     value: 1
   },
   {
-    text: 'New York',
+    label: 'New York',
     value: 2
   }
 ];
@@ -37,7 +37,7 @@ describe('Schema parsing', () => {
         id: 'gender',
         required: false,
         disabled: false,
-        value: undefined,
+        value: 'on',
         name: 'gender',
         type: 'checkbox',
         checked: false
@@ -458,7 +458,7 @@ describe('Schema parsing', () => {
             name: 'member',
             required: false,
             type: 'checkbox',
-            value: undefined,
+            value: 'on',
           },
           _format: null,
           _help: null,
@@ -468,6 +468,36 @@ describe('Schema parsing', () => {
           _phrase: null,
           _prefix: null,
           _type: 'default'
+        }
+      });
+    });
+
+    it('handles nested fields', () => {
+      const actual = toFields({
+        'address.full': 'textarea'
+      });
+
+      expect(actual).to.eql({
+        'address.full': {
+          _attributes: {
+            autocapitalize: "off",
+            autocomplete: "off",
+            autocorrect: "off",
+            disabled: false,
+            id: 'address.full',
+            name: 'address.full',
+            required: false,
+            spellcheck: "false",
+            value: undefined,
+          },
+          _format: null,
+          _help: null,
+          _input: 'textarea',
+          _key: 'address.full',
+          _label: 'Address full',
+          _phrase: null,
+          _prefix: null,
+          _type: 'text'
         }
       });
     });
@@ -487,7 +517,7 @@ describe('Schema parsing', () => {
         expect(actual.state._options).to.eql([
           {
             _key: "state",
-            _label: "Texas",
+            _label: 'Texas',
             _help: null,
             _prefix: null,
             _format: null,
@@ -505,7 +535,7 @@ describe('Schema parsing', () => {
           },
           {
             _key: "state",
-            _label: "Minnesota",
+            _label: 'Minnesota',
             _help: null,
             _prefix: null,
             _format: null,
@@ -524,7 +554,7 @@ describe('Schema parsing', () => {
           },
           {
             _key: "state",
-            _label: "New York",
+            _label: 'New York',
             _help: null,
             _prefix: null,
             _format: null,
@@ -612,7 +642,7 @@ describe('Schema parsing', () => {
         expect(actual.state._options).to.eql([
           {
             _key: "state",
-            _label: "Texas",
+            _label: 'Texas',
             _help: null,
             _prefix: null,
             _format: null,
@@ -632,7 +662,7 @@ describe('Schema parsing', () => {
           },
           {
             _key: "state",
-            _label: "Minnesota",
+            _label: 'Minnesota',
             _help: null,
             _prefix: null,
             _format: null,
@@ -653,7 +683,7 @@ describe('Schema parsing', () => {
           },
           {
             _key: "state",
-            _label: "New York",
+            _label: 'New York',
             _help: null,
             _prefix: null,
             _format: null,
@@ -744,7 +774,7 @@ describe('Schema parsing', () => {
             id: 'hasDonation',
             required: false,
             disabled: false,
-            value: undefined,
+            value: 'on',
             type: 'checkbox',
             checked: false,
             name: 'hasDonation'

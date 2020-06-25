@@ -22,7 +22,19 @@ describe('toHydratedFields', () => {
         }
       },
       amount: 'currencyRange',
-      date: 'dateRange'
+      date: 'dateRange',
+      gifts: {
+        _input: 'checkbox',
+        _attributes: {
+          value: 'on'
+        }
+      },
+      help: {
+        _input: 'checkbox',
+        _attributes: {
+          value: 'on'
+        }
+      }
     },
     {
       name: 'Jack Black',
@@ -44,7 +56,8 @@ describe('toHydratedFields', () => {
       date: {
         key: 'TODAY',
         start: today
-      }
+      },
+      gifts: 'on'
     });
 
     const hydratedFields = toHydratedFields(actual);
@@ -55,21 +68,24 @@ describe('toHydratedFields', () => {
         value: 'Jack Black',
         valueFormatted: 'Jack Black',
         valuePhrased: 'Jack Black',
-        name: 'name'
+        name: 'name',
+        hidden: undefined
       },
       {
         key: 'Email',
         value: 'jack@nacho.com',
         valueFormatted: 'jack@nacho.com',
         valuePhrased: 'jack@nacho.com',
-        name: 'email'
+        name: 'email',
+        hidden: undefined
       },
       {
         key: 'Tres',
         value: 'nachooooooooooo',
         valueFormatted: 'nachooooooooooo',
         valuePhrased: 'nachooooooooooo',
-        name: 'uno.dos.tres'
+        name: 'uno.dos.tres',
+        hidden: undefined
       },
       {
         key: 'Amount',
@@ -84,14 +100,24 @@ describe('toHydratedFields', () => {
         },
         valueFormatted: '$100.00–$5,000.00',
         valuePhrased: '$100.00–$5,000.00',
-        name: 'amount'
+        name: 'amount',
+        hidden: undefined
       },
       {
         key: 'Date',
         value: { key: 'TODAY', start: today },
         valueFormatted: 'Today',
         valuePhrased: 'Today',
-        name: 'date'
+        name: 'date',
+        hidden: undefined
+      },
+      {
+        hidden: undefined,
+        key: "Gifts",
+        name: "gifts",
+        value: "on",
+        valueFormatted: "on",
+        valuePhrased: "on"
       }
     ]);
   });
@@ -162,6 +188,29 @@ describe('Hydating doc' , () => {
         value: '123 Sesame street'
       }
     });
+  });
+
+  it('hydrates checkboxes', () => {
+    const actual = toFields({
+      help: 'switch',
+      foo: 'radio',
+      boo: 'chip',
+      gifts: {
+        _input: 'checkbox',
+        _attributes: {
+          value: 'true'
+        }
+      }
+    }, {
+      help: 'on',
+      boo: 'on',
+      gifts: 'true'
+    });
+
+    expect(actual.help._attributes.checked).to.equal(true);
+    expect(actual.foo._attributes.checked).to.equal(false);
+    expect(actual.boo._attributes.checked).to.equal(true);
+    expect(actual.gifts._attributes.checked).to.equal(true);
   });
 
   describe('errors', () => {
