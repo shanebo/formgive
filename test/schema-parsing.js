@@ -33,6 +33,7 @@ describe('Schema parsing', () => {
       _prefix: null,
       _format: null,
       _phrase: null,
+      _error: null,
       _attributes: {
         id: 'gender',
         required: false,
@@ -316,7 +317,8 @@ describe('Schema parsing', () => {
           _key: 'name',
           _label: 'Name',
           _phrase: null,
-          _prefix: null
+          _prefix: null,
+          _error: null
         }
       });
     });
@@ -347,7 +349,8 @@ describe('Schema parsing', () => {
           _key: 'email',
           _label: 'Email',
           _phrase: null,
-          _prefix: null
+          _prefix: null,
+          _error: null
         }
       });
     });
@@ -382,6 +385,7 @@ describe('Schema parsing', () => {
           _model: 'Author',
           _phrase: null,
           _prefix: null,
+          _error: null,
           _type: 'option'
         }
       });
@@ -409,7 +413,8 @@ describe('Schema parsing', () => {
           _key: 'website',
           _label: 'Website',
           _phrase: null,
-          _prefix: null
+          _prefix: null,
+          _error: null
         }
       });
     });
@@ -467,6 +472,7 @@ describe('Schema parsing', () => {
           _label: 'Member',
           _phrase: null,
           _prefix: null,
+          _error: null,
           _type: 'default'
         }
       });
@@ -497,6 +503,7 @@ describe('Schema parsing', () => {
           _label: 'Address full',
           _phrase: null,
           _prefix: null,
+          _error: null,
           _type: 'text'
         }
       });
@@ -522,6 +529,7 @@ describe('Schema parsing', () => {
             _prefix: null,
             _format: null,
             _phrase: null,
+            _error: null,
             _input: "option",
             _attributes: {
               id: "state-0",
@@ -540,6 +548,7 @@ describe('Schema parsing', () => {
             _prefix: null,
             _format: null,
             _phrase: null,
+            _error: null,
             _input: "option",
             _attributes: {
               id: "state-1",
@@ -559,6 +568,7 @@ describe('Schema parsing', () => {
             _prefix: null,
             _format: null,
             _phrase: null,
+            _error: null,
             _input: "option",
             _attributes: {
               id: "state-2",
@@ -647,6 +657,7 @@ describe('Schema parsing', () => {
             _prefix: null,
             _format: null,
             _phrase: null,
+            _error: null,
             _attributes: {
               id: "state-0",
               required: false,
@@ -667,6 +678,7 @@ describe('Schema parsing', () => {
             _prefix: null,
             _format: null,
             _phrase: null,
+            _error: null,
             _attributes: {
               id: "state-1",
               required: false,
@@ -688,6 +700,7 @@ describe('Schema parsing', () => {
             _prefix: null,
             _format: null,
             _phrase: null,
+            _error: null,
             _attributes: {
               id: "state-2",
               required: false,
@@ -739,7 +752,8 @@ describe('Schema parsing', () => {
           _key: 'name',
           _label: 'Name',
           _phrase: null,
-          _prefix: null
+          _prefix: null,
+          _error: null
         }
       });
     });
@@ -770,6 +784,7 @@ describe('Schema parsing', () => {
           _prefix: null,
           _format: null,
           _phrase: null,
+          _error: null,
           _attributes: {
             id: 'hasDonation',
             required: false,
@@ -791,6 +806,7 @@ describe('Schema parsing', () => {
               _prefix: null,
               _format: null,
               _phrase: null,
+              _error: null,
               _attributes: {
                 id: 'hasDonation-0',
                 required: false,
@@ -811,6 +827,7 @@ describe('Schema parsing', () => {
               _prefix: null,
               _format: null,
               _phrase: null,
+              _error: null,
               _attributes: {
                 id: 'hasDonation-1',
                 required: false,
@@ -829,7 +846,7 @@ describe('Schema parsing', () => {
       });
     });
 
-    it('handles ieldset with no metas', () => {
+    it('handles fieldset with no metas', () => {
       const actual = toFields({
         theme: {
           color: {
@@ -848,6 +865,7 @@ describe('Schema parsing', () => {
           _prefix: null,
           _format: null,
           _phrase: null,
+          _error: null,
           _attributes: {
             id: 'theme',
             required: false,
@@ -862,6 +880,7 @@ describe('Schema parsing', () => {
             _prefix: null,
             _format: null,
             _phrase: null,
+            _error: null,
             _attributes: {
               id: 'color',
               required: false,
@@ -899,6 +918,7 @@ describe('Schema parsing', () => {
           _prefix: null,
           _format: null,
           _phrase: null,
+          _error: null,
           _attributes: {
             id: 'theme',
             required: false,
@@ -913,6 +933,7 @@ describe('Schema parsing', () => {
             _prefix: null,
             _format: null,
             _phrase: null,
+            _error: null,
             _attributes: {
               id: 'color',
               required: false,
@@ -959,6 +980,7 @@ describe('Schema parsing', () => {
           _prefix: null,
           _format: null,
           _phrase: null,
+          _error: null,
           _attributes: {
             id: 'title',
             required: false,
@@ -977,6 +999,7 @@ describe('Schema parsing', () => {
               _prefix: null,
               _format: null,
               _phrase: null,
+              _error: null,
               _input: 'input',
               _attributes: {
                 id: 'title-0',
@@ -996,6 +1019,7 @@ describe('Schema parsing', () => {
               _prefix: null,
               _format: null,
               _phrase: null,
+              _error: null,
               _input: 'input',
               _attributes: {
                 id: 'title-1',
@@ -1015,6 +1039,7 @@ describe('Schema parsing', () => {
               _prefix: null,
               _format: null,
               _phrase: null,
+              _error: null,
               _input: 'input',
               _attributes: {
                 id: 'title-2',
@@ -1077,6 +1102,7 @@ describe('Schema parsing', () => {
               _format: null,
               _phrase: null,
               _input: 'input',
+              _error: null,
               _attributes: {
                 id: 'user',
                 required: false,
@@ -1099,6 +1125,7 @@ describe('Schema parsing', () => {
               _format: null,
               _phrase: null,
               _input: 'input',
+              _error: null,
               _attributes: {
                 id: 'date',
                 required: false,
@@ -1122,6 +1149,7 @@ describe('Schema parsing', () => {
               _phrase: null,
               _input: 'textarea',
               _type: 'text',
+              _error: null,
               _attributes: {
                 id: 'comment',
                 required: false,
