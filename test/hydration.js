@@ -258,6 +258,51 @@ describe('Hydating doc' , () => {
       expect(actual.address.street._error).to.equal("Argument 'address.street' on InputObject 'createAddressInput' is required. Expected type String!");
     });
 
+    it('hydrates errors on fieldsets', () => {
+      const actual = toFields({
+        account: {
+          name: 'text',
+          address: {
+            street: 'text'
+          }
+        }
+      }, {
+        account: {
+          name: 'John'
+        }
+      },
+      [
+        {
+          message: "Argument 'address' on InputObject 'createAccountInput' is required.",
+          extensions: {
+            dotPath: "mutation.createAccountInput.input.account.address"
+          }
+        }
+      ]);
+
+      expect(actual.account.address._error).to.equal("Argument 'address' on InputObject 'createAccountInput' is required.");
+    });
+
+    it('hydrates errors base object', () => {
+      const actual = toFields({
+        name: 'text',
+        email: 'text'
+      }, {
+        name: 'John',
+        email: 'john@email.com'
+      },
+      [
+        {
+          message: 'The name and email address combination must be unique.',
+          extensions: {
+            dotPath: 'mutation.createAccountInput.input'
+          }
+        }
+      ]);
+
+      expect(actual._error).to.equal('The name and email address combination must be unique.');
+    });
+
     it.skip('hydrates errors on multiple fields', () => {
       const actual = toFields({
         type: 'text',
