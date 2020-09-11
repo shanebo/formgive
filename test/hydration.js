@@ -303,6 +303,41 @@ describe('Hydating doc' , () => {
       expect(actual._error).to.equal('The name and email address combination must be unique.');
     });
 
+    it('hydrates errors with no extensions', () => {
+      const actual = toFields({
+        name: 'text',
+        email: 'text'
+      }, {
+        name: 'John',
+        email: 'john@email.com'
+      },
+        [
+          {
+            message: 'The name and email address combination must be unique.',
+          }
+        ]);
+
+      expect(actual._error).to.equal('The name and email address combination must be unique.');
+    });
+
+    it('hydrates errors with no dotPath', () => {
+      const actual = toFields({
+        name: 'text',
+        email: 'text'
+      }, {
+        name: 'John',
+        email: 'john@email.com'
+      },
+        [
+          {
+            message: 'The name and email address combination must be unique.',
+            extensions: {}
+          }
+        ]);
+
+      expect(actual._error).to.equal('The name and email address combination must be unique.');
+    });
+
     it.skip('hydrates errors on multiple fields', () => {
       const actual = toFields({
         type: 'text',
