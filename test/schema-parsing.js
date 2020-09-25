@@ -1071,14 +1071,29 @@ describe('Schema parsing', () => {
       });
 
       expect(actual).to.eql({
-        tags: [
-          {
+        tags: {
+          _key: 'tags',
+          _label: 'Tags',
+          _help: null,
+          _prefix: null,
+          _format: null,
+          _phrase: null,
+          _error: null,
+          _attributes: {
+            id: 'tags',
+            required: false,
+            disabled: false,
+            name: 'tags',
+            value: undefined
+          },
+          _input: 'set',
+          _template: {
             _label: 'Tags',
             _input: 'select',
             _type: 'association',
             _model: 'Tag'
           }
-        ]
+        }
       });
     });
 
@@ -1092,8 +1107,23 @@ describe('Schema parsing', () => {
       });
 
       expect(actual).to.eql({
-        comments: [
-          {
+        comments: {
+          _key: 'comments',
+          _label: 'Comments',
+          _help: null,
+          _prefix: null,
+          _format: null,
+          _phrase: null,
+          _error: null,
+          _input: 'set',
+          _attributes: {
+            id: 'comments',
+            required: false,
+            disabled: false,
+            name: 'comments',
+            value: undefined
+          },
+          _template: {
             user: {
               _key: 'user',
               _label: 'User',
@@ -1108,7 +1138,8 @@ describe('Schema parsing', () => {
                 required: false,
                 disabled: false,
                 value: undefined,
-                name: 'comments.0.user',
+                name: 'comments.$index.user',
+                'data-template-name': 'comments.$index.user',
                 type: 'text',
                 autocapitalize: null,
                 autocomplete: null,
@@ -1131,7 +1162,8 @@ describe('Schema parsing', () => {
                 required: false,
                 disabled: false,
                 value: undefined,
-                name: 'comments.0.date',
+                name: 'comments.$index.date',
+                'data-template-name': 'comments.$index.date',
                 type: 'text',
                 autocapitalize: null,
                 autocomplete: null,
@@ -1155,7 +1187,8 @@ describe('Schema parsing', () => {
                 required: false,
                 disabled: false,
                 value: undefined,
-                name: 'comments.0.comment',
+                name: 'comments.$index.comment',
+                'data-template-name': 'comments.$index.comment',
                 autocomplete: 'off',
                 autocorrect: 'off',
                 autocapitalize: 'off',
@@ -1163,7 +1196,7 @@ describe('Schema parsing', () => {
               }
             }
           }
-        ]
+        }
       });
     });
   });

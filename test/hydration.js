@@ -168,8 +168,266 @@ describe('Hydating doc' , () => {
       }
     });
 
-    const values = actual.foo.tags.map((tag) => tag.name._attributes.value);
-    expect(values).to.eql([ 'theology', 'practice', 'application' ]);
+    expect(actual.foo).to.eql(
+      {
+        _key: 'foo',
+        _label: 'Foo',
+        _help: null,
+        _prefix: null,
+        _format: null,
+        _phrase: null,
+        _error: null,
+        _attributes: {
+          id: 'foo',
+          required: false,
+          disabled: false,
+          value: {
+            tags: [
+              {
+                name: 'theology'
+              },
+              {
+                name: 'practice'
+              },
+              {
+                name: 'application'
+              }
+            ]
+          },
+          name: 'foo'
+        },
+        _input: 'fieldset',
+        tags: {
+          _key: 'tags',
+          _label: 'Tags',
+          _help: null,
+          _prefix: null,
+          _format: null,
+          _phrase: null,
+          _error: null,
+          _input: 'set',
+          _attributes: {
+            id: 'tags',
+            required: false,
+            disabled: false,
+            name: 'foo.tags',
+            value: [
+              {
+                name: 'theology'
+              },
+              {
+                name: 'practice'
+              },
+              {
+                name: 'application'
+              }
+            ]
+          },
+          _template: {
+            name: {
+              _key: 'name',
+              _label: 'Name',
+              _help: null,
+              _prefix: null,
+              _format: null,
+              _phrase: null,
+              _error: null,
+              _input: 'input',
+              _attributes: {
+                id: 'name',
+                required: false,
+                disabled: false,
+                value: undefined,
+                'data-template-name': 'foo.tags.$index.name',
+                name: 'foo.tags.$index.name',
+                type: 'text',
+                autocapitalize: null,
+                autocomplete: null,
+                autocorrect: null,
+                spellcheck: null,
+                xAutocompletetype: null
+              }
+            },
+            color: {
+              _key: 'color',
+              _label: 'Color',
+              _help: null,
+              _prefix: null,
+              _format: null,
+              _phrase: null,
+              _error: null,
+              _input: 'input',
+              _attributes: {
+                id: 'color',
+                required: false,
+                disabled: false,
+                value: undefined,
+                'data-template-name': 'foo.tags.$index.color',
+                name: 'foo.tags.$index.color',
+                type: 'text',
+                autocapitalize: null,
+                autocomplete: null,
+                autocorrect: null,
+                spellcheck: null,
+                xAutocompletetype: null
+              }
+            }
+          },
+          _items: [
+            {
+              name: {
+                _key: 'name',
+                _label: 'Name',
+                _help: null,
+                _prefix: null,
+                _format: null,
+                _phrase: null,
+                _error: null,
+                _input: 'input',
+                _attributes: {
+                  id: 'name',
+                  required: false,
+                  disabled: false,
+                  value: 'theology',
+                  'data-template-name': 'foo.tags.$index.name',
+                  name: 'foo.tags.0.name',
+                  type: 'text',
+                  autocapitalize: null,
+                  autocomplete: null,
+                  autocorrect: null,
+                  spellcheck: null,
+                  xAutocompletetype: null
+                }
+              },
+              color: {
+                _key: 'color',
+                _label: 'Color',
+                _help: null,
+                _prefix: null,
+                _format: null,
+                _phrase: null,
+                _error: null,
+                _input: 'input',
+                _attributes: {
+                  id: 'color',
+                  required: false,
+                  disabled: false,
+                  value: undefined,
+                  'data-template-name': 'foo.tags.$index.color',
+                  name: 'foo.tags.0.color',
+                  type: 'text',
+                  autocapitalize: null,
+                  autocomplete: null,
+                  autocorrect: null,
+                  spellcheck: null,
+                  xAutocompletetype: null
+                }
+              }
+            },
+            {
+              name: {
+                _key: 'name',
+                _label: 'Name',
+                _help: null,
+                _prefix: null,
+                _format: null,
+                _phrase: null,
+                _error: null,
+                _input: 'input',
+                _attributes: {
+                  id: 'name',
+                  required: false,
+                  disabled: false,
+                  value: 'practice',
+                  'data-template-name': 'foo.tags.$index.name',
+                  name: 'foo.tags.1.name',
+                  type: 'text',
+                  autocapitalize: null,
+                  autocomplete: null,
+                  autocorrect: null,
+                  spellcheck: null,
+                  xAutocompletetype: null
+                }
+              },
+              color: {
+                _key: 'color',
+                _label: 'Color',
+                _help: null,
+                _prefix: null,
+                _format: null,
+                _phrase: null,
+                _error: null,
+                _input: 'input',
+                _attributes: {
+                  id: 'color',
+                  required: false,
+                  disabled: false,
+                  value: undefined,
+                  'data-template-name': 'foo.tags.$index.color',
+                  name: 'foo.tags.1.color',
+                  type: 'text',
+                  autocapitalize: null,
+                  autocomplete: null,
+                  autocorrect: null,
+                  spellcheck: null,
+                  xAutocompletetype: null
+                }
+              }
+            },
+            {
+              name: {
+                _key: 'name',
+                _label: 'Name',
+                _help: null,
+                _prefix: null,
+                _format: null,
+                _phrase: null,
+                _error: null,
+                _input: 'input',
+                _attributes: {
+                  id: 'name',
+                  required: false,
+                  disabled: false,
+                  value: 'application',
+                  'data-template-name': 'foo.tags.$index.name',
+                  name: 'foo.tags.2.name',
+                  type: 'text',
+                  autocapitalize: null,
+                  autocomplete: null,
+                  autocorrect: null,
+                  spellcheck: null,
+                  xAutocompletetype: null
+                }
+              },
+              color: {
+                _key: 'color',
+                _label: 'Color',
+                _help: null,
+                _prefix: null,
+                _format: null,
+                _phrase: null,
+                _error: null,
+                _input: 'input',
+                _attributes: {
+                  id: 'color',
+                  required: false,
+                  disabled: false,
+                  value: undefined,
+                  'data-template-name': 'foo.tags.$index.color',
+                  name: 'foo.tags.2.color',
+                  type: 'text',
+                  autocapitalize: null,
+                  autocomplete: null,
+                  autocorrect: null,
+                  spellcheck: null,
+                  xAutocompletetype: null
+                }
+              }
+            }
+          ]
+        }
+      }
+    );
   });
 
   it('hydrates nested field values', () => {
