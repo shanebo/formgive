@@ -1092,7 +1092,8 @@ describe('Schema parsing', () => {
             _input: 'select',
             _type: 'association',
             _model: 'Tag'
-          }
+          },
+          _items: []
         }
       });
     });
@@ -1195,7 +1196,8 @@ describe('Schema parsing', () => {
                 spellcheck: 'false'
               }
             }
-          }
+          },
+          _items: [],
         }
       });
     });
