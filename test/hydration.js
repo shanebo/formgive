@@ -596,7 +596,7 @@ describe('Hydating doc' , () => {
       expect(actual._error).to.equal('The name and email address combination must be unique.');
     });
 
-    it.skip('hydrates errors on multiple fields', () => {
+    it('hydrates errors on multiple fields', () => {
       const actual = toFields({
         type: 'text',
         tags: [{
@@ -622,7 +622,8 @@ describe('Hydating doc' , () => {
         }
       ]);
 
-      expect(actual.tags[1].name._error).to.equal("Argument 'tag.name' on InputObject 'createTag' is too short. Expected a minimun length of 1.");
+      expect(actual.tags._items[0].name._error).to.equal(null);
+      expect(actual.tags._items[1].name._error).to.equal("Argument 'tag.name' on InputObject 'createTag' is too short. Expected a minimun length of 1.");
     });
   });
 });
