@@ -471,6 +471,105 @@ describe('Hydating doc' , () => {
     expect(actual.gifts._attributes.checked).to.equal(true);
   });
 
+  it('hydrates key that is an "Id" association', () => {
+    const actual = toFields({
+      officerId: {
+        _input: 'select',
+        _options: [
+          {
+            label: 'John',
+            value: 1
+          },
+          {
+            label: 'Peter',
+            value: 2
+          },
+          {
+            label: 'Sam',
+            value: 3
+          }
+        ]
+      }
+    }, {
+      officerId: 2
+    });
+
+    expect(actual.officerId._options).to.containSubset([{
+      _attributes: {
+        value: 2,
+        selected: true,
+        checked: true
+      }
+    }]);
+  });
+
+  it('hydrates key that has "Id" in it that is not an "Id" association', () => {
+    const actual = toFields({
+      totalIdiot: {
+        _input: 'select',
+        _options: [
+          {
+            label: 'John',
+            value: 1
+          },
+          {
+            label: 'Peter',
+            value: 2
+          },
+          {
+            label: 'Sam',
+            value: 3
+          }
+        ]
+      }
+    }, {
+      totalIdiot: 2
+    });
+
+    expect(actual.totalIdiot._options).to.containSubset([{
+      _attributes: {
+        value: 2,
+        selected: true,
+        checked: true
+      }
+    }]);
+  });
+
+  it('hydrates an "Id" association', () => {
+    const actual = toFields({
+      officerId: {
+        _input: 'select',
+        _options: [
+          {
+            label: 'John',
+            value: 1
+          },
+          {
+            label: 'Peter',
+            value: 2
+          },
+          {
+            label: 'Sam',
+            value: 3
+          }
+        ]
+      }
+    }, {
+      officer: {
+        value: 2,
+        label: 'Peter'
+      }
+    });
+
+    expect(actual.officerId._options).to.containSubset([{
+      _attributes: {
+        value: 2,
+        selected: true,
+        checked: true
+      }
+    }]);
+  });
+
   it('hydrates pick multiple values', () => {
     const actual = toFields({
       flags: {
