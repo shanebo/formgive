@@ -471,6 +471,46 @@ describe('Hydating doc' , () => {
     expect(actual.gifts._attributes.checked).to.equal(true);
   });
 
+  it('hydrates pick multiple values', () => {
+    const actual = toFields({
+      flags: {
+        _input: 'pick',
+        _type: 'chips',
+        _multiple: true,
+        _options: [
+          {
+            label: 'Uno',
+            value: 'UNO'
+          },
+          {
+            label: 'Dos',
+            value: 'DOS'
+          },
+          {
+            label: 'Tres',
+            value: 'TRES'
+          }
+        ]
+      }
+    }, {
+      flags: ['UNO', 'TRES']
+    });
+
+    expect(actual.flags._options).to.containSubset([{
+      _attributes: {
+        value: 'UNO',
+        checked: true
+      }
+    }]);
+
+    expect(actual.flags._options).to.containSubset([{
+      _attributes: {
+        value: 'TRES',
+        checked: true
+      }
+    }]);
+  });
+
   describe('errors', () => {
     it('hydrates simple errors', () => {
       const actual = toFields({
