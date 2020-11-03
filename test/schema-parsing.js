@@ -521,7 +521,7 @@ describe('Schema parsing', () => {
           state: 1
         });
 
-        expect(actual.state._options).to.eql([
+        expect(actual.state._options).to.containSubset([
           {
             _key: "state",
             _label: 'Texas',
@@ -532,7 +532,6 @@ describe('Schema parsing', () => {
             _error: null,
             _input: "option",
             _attributes: {
-              id: "state-0",
               required: false,
               value: 0,
               selected: false,
@@ -552,7 +551,6 @@ describe('Schema parsing', () => {
             _error: null,
             _input: "option",
             _attributes: {
-              id: "state-1",
               required: false,
               value: 1,
               selected: true,
@@ -572,7 +570,6 @@ describe('Schema parsing', () => {
             _error: null,
             _input: "option",
             _attributes: {
-              id: "state-2",
               required: false,
               value: 2,
               selected: false,
@@ -651,7 +648,7 @@ describe('Schema parsing', () => {
           state: 1
         });
 
-        expect(actual.state._options).to.eql([
+        expect(actual.state._options).to.containSubset([
           {
             _key: "state",
             _label: 'Texas',
@@ -661,7 +658,6 @@ describe('Schema parsing', () => {
             _phrase: null,
             _error: null,
             _attributes: {
-              id: "state-0",
               required: false,
               disabled: false,
               value: 0,
@@ -683,7 +679,6 @@ describe('Schema parsing', () => {
             _phrase: null,
             _error: null,
             _attributes: {
-              id: "state-1",
               required: false,
               disabled: false,
               value: 1,
@@ -705,7 +700,6 @@ describe('Schema parsing', () => {
             _phrase: null,
             _error: null,
             _attributes: {
-              id: "state-2",
               required: false,
               disabled: false,
               value: 2,
@@ -782,7 +776,7 @@ describe('Schema parsing', () => {
         }
       });
 
-      expect(actual).to.eql({
+      expect(actual).to.containSubset({
         hasDonation: {
           _help: null,
           _prefix: null,
@@ -812,7 +806,6 @@ describe('Schema parsing', () => {
               _phrase: null,
               _error: null,
               _attributes: {
-                id: 'hasDonation-0',
                 required: false,
                 disabled: false,
                 value: true,
@@ -833,7 +826,6 @@ describe('Schema parsing', () => {
               _phrase: null,
               _error: null,
               _attributes: {
-                id: 'hasDonation-1',
                 required: false,
                 disabled: false,
                 value: false,
@@ -977,7 +969,7 @@ describe('Schema parsing', () => {
         }
       });
 
-      expect(actual).to.eql({
+      expect(actual).to.containSubset({
         title: {
           _key: 'title',
           _help: null,
@@ -1006,7 +998,6 @@ describe('Schema parsing', () => {
               _error: null,
               _input: 'input',
               _attributes: {
-                id: 'title-0',
                 required: false,
                 disabled: false,
                 value: 1,
@@ -1026,7 +1017,6 @@ describe('Schema parsing', () => {
               _error: null,
               _input: 'input',
               _attributes: {
-                id: 'title-1',
                 required: false,
                 disabled: false,
                 value: 2,
@@ -1046,7 +1036,6 @@ describe('Schema parsing', () => {
               _error: null,
               _input: 'input',
               _attributes: {
-                id: 'title-2',
                 required: false,
                 disabled: false,
                 value: 3,
