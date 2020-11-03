@@ -503,6 +503,78 @@ describe('Hydating doc' , () => {
     }]);
   });
 
+  it('sets select default option', () => {
+    const actual = toFields({
+      type: {
+        _input: 'select',
+        _options: [
+          {
+            label: 'Individual',
+            value: 1
+          },
+          {
+            label: 'Company',
+            value: 2,
+            default: true
+          },
+          {
+            label: 'Church',
+            value: 3
+          }
+        ]
+      }
+    });
+
+    expect(actual.type._options).to.containSubset([{
+      _attributes: {
+        value: 2,
+        selected: true,
+        checked: true
+      }
+    }]);
+  });
+
+  it('sets select default option with hydration', () => {
+    const actual = toFields({
+      type: {
+        _input: 'select',
+        _options: [
+          {
+            label: 'Individual',
+            value: 1
+          },
+          {
+            label: 'Company',
+            value: 2,
+            default: true
+          },
+          {
+            label: 'Church',
+            value: 3
+          }
+        ]
+      }
+    }, {
+      type: 1
+    });
+
+    expect(actual.type._options).to.not.containSubset([{
+      _attributes: {
+        value: 2,
+        selected: true,
+        checked: true
+      }
+    }]);
+
+    expect(actual.type._options).to.containSubset([{
+      _attributes: {
+        value: 1,
+        selected: true,
+        checked: true
+      }
+    }]);
+  });
+
   it('hydrates key that has "Id" in it that is not an "Id" association', () => {
     const actual = toFields({
       totalIdiot: {

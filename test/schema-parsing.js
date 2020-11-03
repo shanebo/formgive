@@ -536,6 +536,7 @@ describe('Schema parsing', () => {
               required: false,
               value: 0,
               selected: false,
+              checked: false,
               disabled: false,
               tabindex: "0",
               name: "state"
@@ -575,6 +576,7 @@ describe('Schema parsing', () => {
               required: false,
               value: 2,
               selected: false,
+              checked: false,
               disabled: false,
               tabindex: "0",
               name: "state"
@@ -664,6 +666,7 @@ describe('Schema parsing', () => {
               disabled: false,
               value: 0,
               type: "checkbox",
+              selected: false,
               checked: false,
               tabindex: "0",
               name: "state"
@@ -708,6 +711,7 @@ describe('Schema parsing', () => {
               value: 2,
               type: "checkbox",
               checked: false,
+              selected: false,
               tabindex: "0",
               name: "state"
             },
