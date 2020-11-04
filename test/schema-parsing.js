@@ -1049,6 +1049,30 @@ describe('Schema parsing', () => {
         }
       });
     });
+
+    it('sets ids on options', () => {
+      const actual = toFields({
+        field: {
+          _input: 'select',
+          _options: [
+            {
+              value: 1
+            },
+            {
+              value: 2
+            },
+            {
+              value: 3
+            }
+          ]
+        }
+      });
+
+      const ids = actual.field._options.map((opt) => opt._attributes.id);
+      ids.forEach((id) => {
+        expect(id).to.match(/field-[a-z0-9]{9}/);
+      });
+    });
   });
 
 
