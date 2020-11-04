@@ -26,7 +26,7 @@ describe('Schema parsing', () => {
       gender: 'radio'
     });
 
-    expect(actual.gender).to.eql({
+    expect(actual.gender).to.containSubset({
       _key: 'gender',
       _label: 'Gender',
       _help: null,
@@ -35,7 +35,6 @@ describe('Schema parsing', () => {
       _phrase: null,
       _error: null,
       _attributes: {
-        id: 'gender',
         required: false,
         disabled: false,
         value: 'on',
@@ -46,6 +45,14 @@ describe('Schema parsing', () => {
       _input: 'checkbox',
       _type: 'radio'
     });
+  });
+
+  it('sets id field', () => {
+    const actual = toFields({
+      sex: 'radio'
+    });
+
+    expect(actual.sex._attributes.id).to.match(/sex-[a-z0-9]{9}/);
   });
 
   it('expands shorthand', () => {
@@ -91,7 +98,6 @@ describe('Schema parsing', () => {
         _phrase: null,
         _input: 'input',
         _attributes: {
-          id: 'joe',
           disabled: false,
           value: undefined,
           name: 'joe',
@@ -112,7 +118,6 @@ describe('Schema parsing', () => {
         _format: null,
         _phrase: null,
         _attributes: {
-          id: 'foo',
           required: false,
           disabled: false,
           value: undefined,
@@ -129,7 +134,6 @@ describe('Schema parsing', () => {
         _phrase: null,
         _input: 'input',
         _attributes: {
-          id: 'name',
           required: false,
           disabled: false,
           value: 'Jack Black',
@@ -151,7 +155,6 @@ describe('Schema parsing', () => {
         _phrase: null,
         _input: 'input',
         _attributes: {
-          id: 'email',
           required: false,
           disabled: false,
           value: 'jack@nacho.com',
@@ -172,7 +175,6 @@ describe('Schema parsing', () => {
         _format: null,
         _phrase: null,
         _attributes: {
-          id: 'uno',
           required: false,
           disabled: false,
           value: {
@@ -191,7 +193,6 @@ describe('Schema parsing', () => {
           _format: null,
           _phrase: null,
           _attributes: {
-            id: "dos",
             required: false,
             disabled: false,
             value: {
@@ -209,7 +210,6 @@ describe('Schema parsing', () => {
             _phrase: null,
             _input: "input",
             _attributes: {
-              id: "tres",
               required: false,
               disabled: false,
               value: "nachooooooooooo",
@@ -230,7 +230,6 @@ describe('Schema parsing', () => {
         _help: null,
         _prefix: null,
         _attributes: {
-          id: 'amount',
           required: false,
           disabled: false,
           value: {
@@ -254,7 +253,6 @@ describe('Schema parsing', () => {
           _input: 'input',
           _prefix: '$',
           _attributes: {
-            id: "min",
             required: false,
             disabled: false,
             value: "$10.00",
@@ -274,7 +272,6 @@ describe('Schema parsing', () => {
           _input: 'input',
           _prefix: '$',
           _attributes: {
-            id: "max",
             required: false,
             disabled: false,
             value: "$5,000.00",
@@ -296,14 +293,13 @@ describe('Schema parsing', () => {
         name: 'text'
       });
 
-      expect(actual).to.eql({
+      expect(actual).to.containSubset({
         name: {
           _attributes: {
             autocapitalize: null,
             autocomplete: null,
             autocorrect: null,
             disabled: false,
-            id: 'name',
             name: 'name',
             required: false,
             spellcheck: null,
@@ -328,14 +324,13 @@ describe('Schema parsing', () => {
         email: '*email'
       });
 
-      expect(actual).to.eql({
+      expect(actual).to.containSubset({
         email: {
           _attributes: {
             autocapitalize: 'off',
             autocomplete: 'email',
             autocorrect: 'off',
             disabled: false,
-            id: 'email',
             name: 'email',
             required: true,
             spellcheck: 'off',
@@ -368,11 +363,10 @@ describe('Schema parsing', () => {
         author: '*select@Author'
       });
 
-      expect(actual).to.eql({
+      expect(actual).to.containSubset({
         author: {
           _attributes: {
             disabled: false,
-            id: 'author',
             name: 'author',
             required: false,
             value: undefined
@@ -396,11 +390,10 @@ describe('Schema parsing', () => {
         website: '*url'
       });
 
-      expect(actual).to.eql({
+      expect(actual).to.containSubset({
         website: {
           _attributes: {
             disabled: false,
-            id: 'website',
             name: 'website',
             pattern: 'https://.*',
             required: true,
@@ -454,12 +447,11 @@ describe('Schema parsing', () => {
         'member': 'checkbox'
       });
 
-      expect(actual).to.eql({
+      expect(actual).to.containSubset({
         member: {
           _attributes: {
             checked: false,
             disabled: false,
-            id: 'member',
             name: 'member',
             required: false,
             type: 'checkbox',
@@ -483,14 +475,13 @@ describe('Schema parsing', () => {
         'address.full': 'textarea'
       });
 
-      expect(actual).to.eql({
+      expect(actual).to.containSubset({
         'address.full': {
           _attributes: {
             autocapitalize: "off",
             autocomplete: "off",
             autocorrect: "off",
             disabled: false,
-            id: 'address.full',
             name: 'address.full',
             required: false,
             spellcheck: "false",
@@ -729,14 +720,13 @@ describe('Schema parsing', () => {
         }
       });
 
-      expect(actual).to.eql({
+      expect(actual).to.containSubset({
         name: {
           _attributes: {
             autocapitalize: null,
             autocomplete: null,
             autocorrect: null,
             disabled: false,
-            id: 'name',
             name: 'name',
             required: true,
             spellcheck: null,
@@ -784,7 +774,6 @@ describe('Schema parsing', () => {
           _phrase: null,
           _error: null,
           _attributes: {
-            id: 'hasDonation',
             required: false,
             disabled: false,
             value: 'on',
@@ -853,7 +842,7 @@ describe('Schema parsing', () => {
         }
       });
 
-      expect(actual).to.eql({
+      expect(actual).to.containSubset({
         theme: {
           _key: 'theme',
           _label: 'Theme',
@@ -863,7 +852,6 @@ describe('Schema parsing', () => {
           _phrase: null,
           _error: null,
           _attributes: {
-            id: 'theme',
             required: false,
             disabled: false,
             value: undefined,
@@ -878,7 +866,6 @@ describe('Schema parsing', () => {
             _phrase: null,
             _error: null,
             _attributes: {
-              id: 'color',
               required: false,
               disabled: false,
               value: undefined,
@@ -906,7 +893,7 @@ describe('Schema parsing', () => {
         }
       });
 
-      expect(actual).to.eql({
+      expect(actual).to.containSubset({
         theme: {
           _key: 'theme',
           _label: 'Theme',
@@ -916,7 +903,6 @@ describe('Schema parsing', () => {
           _phrase: null,
           _error: null,
           _attributes: {
-            id: 'theme',
             required: false,
             disabled: false,
             value: undefined,
@@ -931,7 +917,6 @@ describe('Schema parsing', () => {
             _phrase: null,
             _error: null,
             _attributes: {
-              id: 'color',
               required: false,
               disabled: false,
               value: undefined,
@@ -978,7 +963,6 @@ describe('Schema parsing', () => {
           _phrase: null,
           _error: null,
           _attributes: {
-            id: 'title',
             required: false,
             disabled: false,
             value: undefined,
@@ -1049,6 +1033,30 @@ describe('Schema parsing', () => {
         }
       });
     });
+
+    it('sets ids on options', () => {
+      const actual = toFields({
+        field: {
+          _input: 'select',
+          _options: [
+            {
+              value: 1
+            },
+            {
+              value: 2
+            },
+            {
+              value: 3
+            }
+          ]
+        }
+      });
+
+      const ids = actual.field._options.map((opt) => opt._attributes.id);
+      ids.forEach((id) => {
+        expect(id).to.match(/field-[a-z0-9]{9}/);
+      });
+    });
   });
 
 
@@ -1063,7 +1071,7 @@ describe('Schema parsing', () => {
         }]
       });
 
-      expect(actual).to.eql({
+      expect(actual).to.containSubset({
         tags: {
           _key: 'tags',
           _label: 'Tags',
@@ -1073,7 +1081,6 @@ describe('Schema parsing', () => {
           _phrase: null,
           _error: null,
           _attributes: {
-            id: 'tags',
             required: false,
             disabled: false,
             name: 'tags',
@@ -1100,7 +1107,7 @@ describe('Schema parsing', () => {
         }]
       });
 
-      expect(actual).to.eql({
+      expect(actual).to.containSubset({
         comments: {
           _key: 'comments',
           _label: 'Comments',
@@ -1111,7 +1118,6 @@ describe('Schema parsing', () => {
           _error: null,
           _input: 'set',
           _attributes: {
-            id: 'comments',
             required: false,
             disabled: false,
             name: 'comments',
@@ -1128,7 +1134,6 @@ describe('Schema parsing', () => {
               _input: 'input',
               _error: null,
               _attributes: {
-                id: 'user',
                 required: false,
                 disabled: false,
                 value: undefined,
@@ -1152,7 +1157,6 @@ describe('Schema parsing', () => {
               _input: 'input',
               _error: null,
               _attributes: {
-                id: 'date',
                 required: false,
                 disabled: false,
                 value: undefined,
@@ -1177,7 +1181,6 @@ describe('Schema parsing', () => {
               _type: 'text',
               _error: null,
               _attributes: {
-                id: 'comment',
                 required: false,
                 disabled: false,
                 value: undefined,

@@ -168,7 +168,7 @@ describe('Hydating doc' , () => {
       }
     });
 
-    expect(actual.foo).to.eql(
+    expect(actual.foo).to.containSubset(
       {
         _key: 'foo',
         _label: 'Foo',
@@ -178,7 +178,6 @@ describe('Hydating doc' , () => {
         _phrase: null,
         _error: null,
         _attributes: {
-          id: 'foo',
           required: false,
           disabled: false,
           value: {
@@ -207,7 +206,6 @@ describe('Hydating doc' , () => {
           _error: null,
           _input: 'set',
           _attributes: {
-            id: 'tags',
             required: false,
             disabled: false,
             name: 'foo.tags',
@@ -234,7 +232,6 @@ describe('Hydating doc' , () => {
               _error: null,
               _input: 'input',
               _attributes: {
-                id: 'name',
                 required: false,
                 disabled: false,
                 value: undefined,
@@ -258,7 +255,6 @@ describe('Hydating doc' , () => {
               _error: null,
               _input: 'input',
               _attributes: {
-                id: 'color',
                 required: false,
                 disabled: false,
                 value: undefined,
@@ -285,7 +281,6 @@ describe('Hydating doc' , () => {
                 _error: null,
                 _input: 'input',
                 _attributes: {
-                  id: 'name',
                   required: false,
                   disabled: false,
                   value: 'theology',
@@ -309,7 +304,6 @@ describe('Hydating doc' , () => {
                 _error: null,
                 _input: 'input',
                 _attributes: {
-                  id: 'color',
                   required: false,
                   disabled: false,
                   value: undefined,
@@ -335,7 +329,6 @@ describe('Hydating doc' , () => {
                 _error: null,
                 _input: 'input',
                 _attributes: {
-                  id: 'name',
                   required: false,
                   disabled: false,
                   value: 'practice',
@@ -359,7 +352,6 @@ describe('Hydating doc' , () => {
                 _error: null,
                 _input: 'input',
                 _attributes: {
-                  id: 'color',
                   required: false,
                   disabled: false,
                   value: undefined,
@@ -385,7 +377,6 @@ describe('Hydating doc' , () => {
                 _error: null,
                 _input: 'input',
                 _attributes: {
-                  id: 'name',
                   required: false,
                   disabled: false,
                   value: 'application',
@@ -409,7 +400,6 @@ describe('Hydating doc' , () => {
                 _error: null,
                 _input: 'input',
                 _attributes: {
-                  id: 'color',
                   required: false,
                   disabled: false,
                   value: undefined,
