@@ -243,7 +243,7 @@ describe('Schema parsing', () => {
           },
           name: 'amount'
         },
-        _css: 'FieldsetRow',
+        _css: 'Fieldset--row',
         _input: 'fieldset',
         min: {
           _key: 'min',
