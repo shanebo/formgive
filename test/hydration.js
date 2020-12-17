@@ -123,7 +123,7 @@ describe('toHydratedFields', () => {
   });
 });
 
-describe('Hydating doc' , () => {
+describe('Hydrating doc' , () => {
   it('hydrates values', () => {
     const actual = toFields({
       name: 'text',
