@@ -1208,4 +1208,58 @@ describe('Schema parsing', () => {
       });
     });
   });
+
+  describe('Input definitions', () => {
+    it('float', () => {
+      const actual = toFields({
+        amount: 'float'
+      });
+
+      expect(actual.amount).to.containSubset({
+        _key: 'amount',
+        _label: 'Amount',
+        _help: null,
+        _prefix: null,
+        _format: null,
+        _phrase: null,
+        _error: null,
+        _input: 'input',
+        _attributes: {
+          required: false,
+          disabled: false,
+          value: undefined,
+          name: 'amount',
+          type: 'number',
+          step: '.01',
+          min: '.01'
+        }
+      });
+    });
+
+    it('int', () => {
+      const actual = toFields({
+        shares: 'int'
+      });
+
+      expect(actual.shares).to.containSubset({
+        _key: 'shares',
+        _label: 'Shares',
+        _help: null,
+        _prefix: null,
+        _format: null,
+        _phrase: null,
+        _error: null,
+        _input: 'input',
+        _attributes: {
+          required: false,
+          disabled: false,
+          value: undefined,
+          name: 'shares',
+          type: 'number',
+          step: '1',
+          min: '1'
+        }
+      });
+    });
+  });
 });
