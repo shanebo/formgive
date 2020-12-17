@@ -949,7 +949,7 @@ describe('Schema parsing', () => {
         title: {
           _label: 'Title',
           _input: 'select',
-          _type: 'number',
+          _type: 'int',
           _options: [
             {
               label: 'Mr.',
@@ -983,7 +983,7 @@ describe('Schema parsing', () => {
           },
           _label: 'Title',
           _input: 'select',
-          _type: 'number',
+          _type: 'int',
           _options: [
             {
               _key: 'title',
@@ -999,7 +999,6 @@ describe('Schema parsing', () => {
                 disabled: false,
                 value: 1,
                 type: 'number',
-                pattern: '[0-9]*',
                 tabindex: '0',
                 name: 'title'
               }
@@ -1018,7 +1017,6 @@ describe('Schema parsing', () => {
                 disabled: false,
                 value: 2,
                 type: 'number',
-                pattern: '[0-9]*',
                 tabindex: '0',
                 name: 'title'
               }
@@ -1037,7 +1035,6 @@ describe('Schema parsing', () => {
                 disabled: false,
                 value: 3,
                 type: 'number',
-                pattern: '[0-9]*',
                 tabindex: '0',
                 name: 'title'
               }
