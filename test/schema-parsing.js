@@ -573,6 +573,19 @@ describe('Schema parsing', () => {
         ]);
       });
 
+      it('extends float input definition', () => {
+        const actual = toFields({
+          amount: {
+            _input: 'float',
+            _attributes: {
+              min: '1'
+            }
+          }
+        });
+
+        expect(actual.amount._input).to.equal('input');
+      });
+
       it('handles pick:switches data structure', () => {
         const actual = toFields({
             state: input('*pick:switches', mockOptions)
@@ -736,7 +749,7 @@ describe('Schema parsing', () => {
           },
           _format: null,
           _help: null,
-          _input: 'text',
+          _input: 'input',
           _key: 'name',
           _label: 'Name',
           _phrase: null,
