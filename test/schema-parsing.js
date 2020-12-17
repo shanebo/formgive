@@ -573,6 +573,19 @@ describe('Schema parsing', () => {
         ]);
       });
 
+      it('extends float input definition', () => {
+        const actual = toFields({
+          amount: {
+            _input: 'float',
+            _attributes: {
+              min: '1'
+            }
+          }
+        });
+
+        expect(actual.amount._input).to.equal('input');
+      });
+
       it('handles pick:switches data structure', () => {
         const actual = toFields({
             state: input('*pick:switches', mockOptions)
@@ -736,7 +749,7 @@ describe('Schema parsing', () => {
           },
           _format: null,
           _help: null,
-          _input: 'text',
+          _input: 'input',
           _key: 'name',
           _label: 'Name',
           _phrase: null,
@@ -936,7 +949,7 @@ describe('Schema parsing', () => {
         title: {
           _label: 'Title',
           _input: 'select',
-          _type: 'number',
+          _type: 'int',
           _options: [
             {
               label: 'Mr.',
@@ -970,7 +983,7 @@ describe('Schema parsing', () => {
           },
           _label: 'Title',
           _input: 'select',
-          _type: 'number',
+          _type: 'int',
           _options: [
             {
               _key: 'title',
@@ -986,7 +999,6 @@ describe('Schema parsing', () => {
                 disabled: false,
                 value: 1,
                 type: 'number',
-                pattern: '[0-9]*',
                 tabindex: '0',
                 name: 'title'
               }
@@ -1005,7 +1017,6 @@ describe('Schema parsing', () => {
                 disabled: false,
                 value: 2,
                 type: 'number',
-                pattern: '[0-9]*',
                 tabindex: '0',
                 name: 'title'
               }
@@ -1024,7 +1035,6 @@ describe('Schema parsing', () => {
                 disabled: false,
                 value: 3,
                 type: 'number',
-                pattern: '[0-9]*',
                 tabindex: '0',
                 name: 'title'
               }
@@ -1194,6 +1204,60 @@ describe('Schema parsing', () => {
             }
           },
           _items: [],
+        }
+      });
+    });
+  });
+
+  describe('Input definitions', () => {
+    it('float', () => {
+      const actual = toFields({
+        amount: 'float'
+      });
+
+      expect(actual.amount).to.containSubset({
+        _key: 'amount',
+        _label: 'Amount',
+        _help: null,
+        _prefix: null,
+        _format: null,
+        _phrase: null,
+        _error: null,
+        _input: 'input',
+        _attributes: {
+          required: false,
+          disabled: false,
+          value: undefined,
+          name: 'amount',
+          type: 'number',
+          step: '.01',
+          min: '.01'
+        }
+      });
+    });
+
+    it('int', () => {
+      const actual = toFields({
+        shares: 'int'
+      });
+
+      expect(actual.shares).to.containSubset({
+        _key: 'shares',
+        _label: 'Shares',
+        _help: null,
+        _prefix: null,
+        _format: null,
+        _phrase: null,
+        _error: null,
+        _input: 'input',
+        _attributes: {
+          required: false,
+          disabled: false,
+          value: undefined,
+          name: 'shares',
+          type: 'number',
+          step: '1',
+          min: '1'
         }
       });
     });
