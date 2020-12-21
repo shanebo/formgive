@@ -358,6 +358,19 @@ describe('Schema parsing', () => {
       expect(actual.status._attributes.disabled).to.equal(true);
     });
 
+    it('disabled combobox input', () => {
+      const actual = toFields({
+        person: '!association@account'
+      });
+      expect(actual).to.containSubset({
+        person: {
+          _attributes: {
+            disabled: true
+          }
+        }
+      });
+    });
+
     it('required association using select', () => {
       const actual = toFields({
         author: '*select@Author'
@@ -368,7 +381,7 @@ describe('Schema parsing', () => {
           _attributes: {
             disabled: false,
             name: 'author',
-            required: false,
+            required: true,
             value: undefined
           },
           _format: null,
