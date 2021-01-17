@@ -586,6 +586,34 @@ describe('Schema parsing', () => {
         ]);
       });
 
+      it('expands address input', () => {
+        const actual = toFields({
+          address: 'address'
+        });
+
+        expect(actual.address).to.containSubset({
+          locality: {
+            _attributes: {
+              required: false
+            }
+          }
+        });
+      });
+
+      it('expands address input and sets required', () => {
+        const actual = toFields({
+          address: '*address'
+        });
+
+        expect(actual.address).to.containSubset({
+          locality: {
+            _attributes: {
+              required: true
+            }
+          }
+        });
+      });
+
       it('extends float input definition', () => {
         const actual = toFields({
           amount: {
