@@ -596,6 +596,14 @@ describe('Schema parsing', () => {
             _attributes: {
               required: false
             }
+          },
+          postalCode: {
+            _attributes: {
+              name: 'address.postalCode',
+              pattern: '[a-zA-Z\\d\\s\\-]+'
+            },
+            _key: 'postalCode',
+            _label: 'Postal code',
           }
         });
       });
