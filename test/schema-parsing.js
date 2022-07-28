@@ -21,10 +21,13 @@ const mockOptions = [
 ];
 
 describe('Schema parsing', () => {
-  it('expands input', () => {
+  it.only('expands input', () => {
     const actual = toFields({
+      _form: 'foo',
       gender: 'radio'
     });
+
+    console.log(actual);
 
     expect(actual.gender).to.containSubset({
       _key: 'gender',
