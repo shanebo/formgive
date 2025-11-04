@@ -1,25 +1,19 @@
 {
   "name": "formgive",
-  "version": "1.0.0",
+  "version": "1.1.0",
+  "author": "Shane Thacker <shane@steadymade.com>",
+  "repository": "git://github.com/shanebo/formgive.git",
+  "main": "./lib/index",
+  "dependencies": {
+    "kind-of": "^6.0.3"
+  },
   "description": "Form structures",
-  "license": "MIT",
+  "engine": ">= 0.4.1",
   "keywords": [
     "form structures"
   ],
-  "repository": "git://github.com/shanebo/formgive.git",
-  "author": "Shane Thacker <shane@steadymade.com>",
-  "engine": ">= 0.4.1",
-  "main": "./lib/index",
+  "license": "MIT",
   "scripts": {
     "test": "mocha --watch"
-  },
-  "devDependencies": {
-    "chai": "^4.3.6",
-    "chai-string": "1.5.0",
-    "chai-subset": "^1.6.0",
-    "mocha": "^10.0.0"
-  },
-  "dependencies": {
-    "kind-of": "^6.0.3"
   }
 }
