@@ -318,4 +318,25 @@ describe('coercion edge cases', () => {
       method: ''
     })).toEqual(undefined);
   });
+
+  test('HTML checkbox "on" value coerces to true for boolean fields', () => {
+    const Schema = object({
+      label: string(),
+      isActive: boolean(),
+      isSelected: boolean()
+    });
+
+    // HTML checkboxes send "on" when checked
+    const result = Schema.parse({
+      label: 'test',
+      isActive: 'on',
+      isSelected: 'on'
+    });
+
+    expect(result).toEqual({
+      label: 'test',
+      isActive: true,
+      isSelected: true
+    });
+  });
 });

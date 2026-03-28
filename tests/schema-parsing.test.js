@@ -3,6 +3,170 @@ import '../lib/utils.js';
 import { array, date, number, integer, boolean, object, string } from '../lib/index.js';
 
 describe('schema parsing', () => {
+  describe('primitive type schemas', () => {
+    test('string schema called directly returns no name', () => {
+      const StringSchema = string();
+      const schema = StringSchema.schema('hello');
+
+      expect(schema.type).toBe('string');
+      expect(schema.name).toBeUndefined();
+    });
+
+    test('string schema with parentKey returns name', () => {
+      const StringSchema = string();
+      const schema = StringSchema.schema('hello', 'myField');
+
+      // parentKey is used for nested objects, not for setting name on primitives
+      expect(schema.type).toBe('string');
+      expect(schema.name).toBeUndefined();
+    });
+
+    test('number schema called directly', () => {
+      const NumberSchema = number();
+      const schema = NumberSchema.schema(42);
+
+      expect(schema.type).toBe('number');
+      expect(schema.name).toBeUndefined();
+    });
+
+    test('boolean schema called directly', () => {
+      const BoolSchema = boolean();
+      const schema = BoolSchema.schema(true);
+
+      expect(schema.type).toBe('boolean');
+      expect(schema.name).toBeUndefined();
+    });
+
+    test('string schema with options and fallback', () => {
+      const StatusSchema = string()
+        .options(['draft', 'published', 'archived'])
+        .fallback('draft')
+        .required();
+
+      const schema = StatusSchema.schema(undefined);
+
+      expect(schema).toMatchObject({
+        type: 'string',
+        required: true,
+        fallback: 'draft',
+        options: [
+          { label: 'draft', value: 'draft' },
+          { label: 'published', value: 'published' },
+          { label: 'archived', value: 'archived' }
+        ],
+        optionValues: ['draft', 'published', 'archived']
+      });
+      expect(schema.optionsSet).toBeInstanceOf(Set);
+      expect(schema.name).toBeUndefined();
+    });
+
+    test('number schema with constraints', () => {
+      const PriceSchema = number()
+        .min(0)
+        .max(10000)
+        .fallback(0)
+        .required();
+
+      const schema = PriceSchema.schema(99.99);
+
+      expect(schema).toMatchObject({
+        type: 'number',
+        required: true,
+        fallback: 0,
+        min: 0,
+        max: 10000
+      });
+      expect(schema.name).toBeUndefined();
+    });
+
+    test('primitive with field name gets enriched', () => {
+      const StatusSchema = string()
+        .options(['draft', 'published', 'archived'])
+        .field({ name: 'status' });
+
+      const schema = StatusSchema.schema('published');
+
+      expect(schema).toMatchObject({
+        name: 'status',
+        label: 'Status',
+        input: 'select',
+        value: 'published'
+      });
+      expect(schema.id).toBeDefined();
+      expect(schema.options[0]).toMatchObject({
+        id: expect.any(String),
+        name: 'status',
+        type: 'chip',
+        label: 'draft',
+        content: 'draft',
+        value: 'draft'
+      });
+      expect(schema.options[1]).toMatchObject({
+        value: 'published',
+        selected: true,
+        checked: true
+      });
+    });
+
+    test('primitive with field name and custom label', () => {
+      const StatusSchema = string()
+        .options(['draft', 'published'])
+        .field({ name: 'status', label: 'Publication Status' });
+
+      const schema = StatusSchema.schema('draft');
+
+      expect(schema.name).toBe('status');
+      expect(schema.label).toBe('Publication Status');
+    });
+
+    test('primitive number with field name', () => {
+      const PriceSchema = number()
+        .field({ name: 'price', label: 'Price' });
+
+      const schema = PriceSchema.schema(99.99);
+
+      expect(schema).toMatchObject({
+        name: 'price',
+        label: 'Price',
+        input: 'input',
+        type: 'number',
+        value: 99.99
+      });
+      expect(schema.id).toBeDefined();
+    });
+
+    test('primitive boolean with field name', () => {
+      const ActiveSchema = boolean()
+        .field({ name: 'isActive' });
+
+      const schema = ActiveSchema.schema(true);
+
+      expect(schema).toMatchObject({
+        name: 'isActive',
+        label: 'Is active',
+        input: 'choice',
+        type: 'switch',
+        checked: true,
+        value: true
+      });
+    });
+
+    test('primitive string with field name (no options)', () => {
+      const NameSchema = string()
+        .field({ name: 'username' });
+
+      const schema = NameSchema.schema('john');
+
+      expect(schema).toMatchObject({
+        name: 'username',
+        label: 'Username',
+        input: 'input',
+        type: 'text',
+        value: 'john'
+      });
+    });
+  });
+
   describe('basic field types', () => {
     test('simple text field schema', () => {
       const Schema = object({
@@ -352,6 +516,74 @@ describe('schema parsing', () => {
       const schema = Schema.schema({ merge: { type: 'foo' } });
 
       expect(schema.props.merge.classes).toEqual('-inset');
+    });
+  });
+
+  describe('fallback configuration', () => {
+    test('can set fallback to undefined explicitly', () => {
+      const Schema = object({
+        name: string().fallback(undefined)
+      });
+      const schema = Schema.schema({ name: undefined });
+
+      // schema() uses data() which applies fallback, so undefined fallback means value stays undefined
+      expect(schema.props.name.value).toEqual(undefined);
+
+      // For objects, data() removes undefined values, so if all props are undefined, it returns undefined
+      const data = Schema.data({ name: undefined });
+      expect(data).toEqual(undefined);
+    });
+
+    test('fallback undefined returns undefined when input is undefined', () => {
+      const Schema = string().fallback(undefined);
+      const result = Schema.data(undefined);
+      expect(result).toEqual(undefined);
+    });
+
+    test('fallback undefined does not override valid input', () => {
+      const Schema = string().fallback(undefined);
+      const result = Schema.data('test');
+      expect(result).toEqual('test');
+    });
+
+    test('fallback undefined vs no fallback behaves the same', () => {
+      const SchemaWithUndefinedFallback = string().fallback(undefined);
+      const SchemaWithoutFallback = string();
+
+      const input1 = SchemaWithUndefinedFallback.data(undefined);
+      const input2 = SchemaWithoutFallback.data(undefined);
+
+      expect(input1).toEqual(input2);
+      expect(input1).toEqual(undefined);
+    });
+
+    test('fallback undefined on object field', () => {
+      const Schema = object({
+        name: string().fallback(undefined),
+        email: string().fallback('default@example.com')
+      });
+
+      // schema() applies fallback via data(), so email gets its fallback value
+      const schema = Schema.schema({ name: undefined, email: undefined });
+      expect(schema.props.name.value).toEqual(undefined);
+      expect(schema.props.email.value).toEqual('default@example.com');
+
+      // data() removes undefined values, so name is removed but email stays
+      const data = Schema.data({ name: undefined, email: undefined });
+      expect(data.name).toBeUndefined();
+      expect(data.email).toEqual('default@example.com');
+    });
+
+    test('fallback undefined allows field to be removed from object data', () => {
+      const Schema = object({
+        name: string().fallback(undefined),
+        email: string()
+      });
+
+      // When name has fallback(undefined) and input is undefined, it gets removed from data
+      const data = Schema.data({ name: undefined, email: 'test@example.com' });
+      expect(data.name).toBeUndefined();
+      expect(data.email).toEqual('test@example.com');
     });
   });
 
