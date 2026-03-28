@@ -1,13 +1,13 @@
 import { describe, test, expect } from 'bun:test';
 import '../lib/utils.js';
-import { array, number, object, string } from '../lib/index.js';
+import { array, boolean, number, object, string } from '../lib/index.js';
 
 // NOTE: The old API had a `toSentence` function that formatted field values into a sentence string.
 // This functionality doesn't exist in the new API yet. These tests are ported but skipped until
 // equivalent functionality is implemented.
 
 describe('toSentence', () => {
-  test.skip('formats values', () => {
+  test('formats values', () => {
     // Old API:
     // const fields = toFields({
     //   name: 'name',
@@ -21,20 +21,18 @@ describe('toSentence', () => {
 
     // New API equivalent would be:
     const Schema = object({
-      name: string(),
-      email: string()
+      name: string().sentence(),
+      email: string().sentence()
     });
-    const schema = Schema.schema({
+    const sentence = Schema.toSentence({
       name: 'shane thacker',
       email: 'shane@steadymade.com'
     });
 
-    // TODO: Implement toSentence equivalent or similar functionality
-    // const actual = toSentence(schema);
-    // expect(actual).toEqual('shane thacker shane@steadymade.com');
+    expect(sentence).toEqual('shane thacker shane@steadymade.com');
   });
 
-  test.skip('formats values with currency', () => {
+  test('formats values with currency', () => {
     // Old API:
     // const fields = toFields({
     //   amount: {
@@ -52,23 +50,21 @@ describe('toSentence', () => {
 
     const Schema = object({
       amount: object({
-        min: number().field({ prefix: '$' }),
-        max: number().field({ prefix: '$' })
+        min: number().field({ prefix: '$' }).sentence(),
+        max: number().field({ prefix: '$' }).sentence()
       })
     });
-    const schema = Schema.schema({
+    const sentence = Schema.toSentence({
       amount: {
         min: 30,
         max: 1000
       }
     });
 
-    // TODO: Implement toSentence equivalent with currency formatting
-    // const actual = toSentence(schema);
-    // expect(actual).toEqual('$30.00 $1,000.00');
+    expect(sentence).toEqual('$30.00 $1,000.00');
   });
 
-  test.skip('handles values with some phrases', () => {
+  test('handles values with some phrases', () => {
     // Old API had _phrase callback support:
     // const fields = toFields({
     //   name: {
@@ -84,20 +80,20 @@ describe('toSentence', () => {
     // expect(actual).to.equal('My name is shane thacker shane@steadymade.com');
 
     const Schema = object({
-      name: string(),
-      email: string()
+      name: string().sentence({
+        phrase: (text) => `My name is ${text}`
+      }),
+      email: string().sentence()
     });
-    const schema = Schema.schema({
+    const sentence = Schema.toSentence({
       name: 'shane thacker',
       email: 'shane@steadymade.com'
     });
 
-    // TODO: Implement phrase support in new API
-    // const actual = toSentence(schema);
-    // expect(actual).toEqual('My name is shane thacker shane@steadymade.com');
+    expect(sentence).toEqual('My name is shane thacker shane@steadymade.com');
   });
 
-  test.skip('handles values with some phrases and format', () => {
+  test('handles values with some phrases and format', () => {
     // Old API had _format and _phrase callbacks:
     // const fields = toFields({
     //   name: {
@@ -113,19 +109,20 @@ describe('toSentence', () => {
     // expect(actual).to.equal('My name is SHANE THACKER');
 
     const Schema = object({
-      name: string(),
+      name: string().sentence({
+        format: (val) => String(val).toUpperCase(),
+        phrase: (text) => `My name is ${text}`
+      }),
       email: string()
     });
-    const schema = Schema.schema({
+    const sentence = Schema.toSentence({
       name: 'shane thacker'
     });
 
-    // TODO: Implement format and phrase support in new API
-    // const actual = toSentence(schema);
-    // expect(actual).toEqual('My name is SHANE THACKER');
+    expect(sentence).toEqual('My name is SHANE THACKER');
   });
 
-  test.skip('handles values with nested fields', () => {
+  test('handles values with nested fields', () => {
     // Old API:
     // const fields = toFields({
     //   name: 'name',
@@ -148,15 +145,15 @@ describe('toSentence', () => {
     // expect(actual).to.equal('shane thacker 76177 TX US 817-945-6101');
 
     const Schema = object({
-      name: string(),
+      name: string().sentence(),
       address: object({
-        zip: string(),
-        state: string(),
-        country: string()
+        zip: string().sentence(),
+        state: string().sentence(),
+        country: string().sentence()
       }),
-      phone: string()
+      phone: string().sentence()
     });
-    const schema = Schema.schema({
+    const sentence = Schema.toSentence({
       name: 'shane thacker',
       address: {
         zip: '76177',
@@ -166,12 +163,10 @@ describe('toSentence', () => {
       phone: '817-945-6101'
     });
 
-    // TODO: Implement toSentence with nested field support
-    // const actual = toSentence(schema);
-    // expect(actual).toEqual('shane thacker 76177 TX US 817-945-6101');
+    expect(sentence).toEqual('shane thacker 76177 TX US 817-945-6101');
   });
 
-  test.skip('handles values with nested fields with formats and phrases', () => {
+  test('handles values with nested fields with formats and phrases', () => {
     // Old API:
     // const fields = toFields({
     //   name: 'name',
@@ -199,13 +194,18 @@ describe('toSentence', () => {
     // expect(actual).to.equal('shane thacker lives in TX and can be reached at 817-945-6101');
 
     const Schema = object({
-      name: string(),
+      name: string().sentence(),
       address: object({
-        state: string()
+        state: string().sentence({
+          prefix: 'lives in'
+        })
       }),
-      phone: string()
+      phone: string().sentence({
+        format: (val) => String(val).replace(/\s/g, '-'),
+        phrase: (text) => `and can be reached at ${text}`
+      })
     });
-    const schema = Schema.schema({
+    const sentence = Schema.toSentence({
       name: 'shane thacker',
       address: {
         zip: '76177',
@@ -215,8 +215,71 @@ describe('toSentence', () => {
       phone: '817 945 6101'
     });
 
-    // TODO: Implement toSentence with format and phrase support for nested fields
-    // const actual = toSentence(schema);
-    // expect(actual).toEqual('shane thacker lives in TX and can be reached at 817-945-6101');
+    expect(sentence).toEqual('shane thacker lives in TX and can be reached at 817-945-6101');
+  });
+
+  describe('Interface schema example', () => {
+    const figureOptions = [
+      { label: 'Horatius Bonar', value: 'HB' },
+      { label: 'John Owen', value: 'JO' }
+    ];
+
+    const topics = [
+      { label: 'Justification', value: 'JUSTIFICATION' },
+      { label: 'Sanctification', value: 'SANCTIFICATION' }
+    ];
+
+    const Interface = object({
+      unabridged: boolean().field({ input: 'switch' }).sentence(),
+      type: string()
+        .options([
+          { label: 'Book', value: 'BOOK' },
+          { label: 'Booklet', value: 'BOOKLET' },
+          { label: 'Ebook', value: 'EBOOK' }
+        ])
+        .sentence({
+          transform: (text) => text.toLowerCase() + 's'
+        }),
+      figureId: string()
+        .options(figureOptions)
+        .field({ input: 'select' })
+        .sentence({ prefix: 'by' }),
+      topic: string()
+        .options(topics)
+        .field({ input: 'select' })
+        .sentence({
+          prefix: 'on',
+          transform: (text) => text.toLowerCase()
+        })
+    });
+
+    test('renders full sentence', () => {
+      const sentence = Interface.toSentence({
+        unabridged: true,
+        type: 'BOOKLET',
+        figureId: 'HB',
+        topic: 'JUSTIFICATION'
+      });
+
+      expect(sentence).toEqual('Unabridged booklets by Horatius Bonar on justification');
+    });
+
+    test('renders partial sentence (only topic)', () => {
+      const sentence = Interface.toSentence({
+        topic: 'JUSTIFICATION'
+      });
+
+      expect(sentence).toEqual('on justification');
+    });
+
+    test('omits boolean when false and omits undefined', () => {
+      const sentence = Interface.toSentence({
+        unabridged: false,
+        type: 'BOOK',
+        figureId: undefined
+      });
+
+      expect(sentence).toEqual('books');
+    });
   });
 });
