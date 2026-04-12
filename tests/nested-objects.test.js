@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'bun:test';
 import '../lib/utils.js';
-import { object, string } from '../lib/index.js';
+import { boolean, object, string } from '../lib/index.js';
 
 describe('nested objects', () => {
   test('nested object schema', () => {
@@ -94,5 +94,26 @@ describe('nested objects', () => {
     // Fallback is checked at the end only if coercedInput is undefined
     const Schema2 = string().fallback('default');
     expect(Schema2.data(undefined)).toEqual('default');
+  });
+
+  test('nested partial parse skips omitted nested props', () => {
+    const Schema = object({
+      settings: object({
+        surfaced: boolean().fallback(false),
+        dueAt: string().fallback('')
+      })
+    });
+
+    const parsed = Schema.parse({
+      settings: {
+        surfaced: 'true'
+      }
+    }, { partial: true });
+
+    expect(parsed).toEqual({
+      settings: {
+        surfaced: true
+      }
+    });
   });
 });

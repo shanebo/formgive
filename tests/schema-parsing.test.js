@@ -585,6 +585,51 @@ describe('schema parsing', () => {
       expect(data.name).toBeUndefined();
       expect(data.email).toEqual('test@example.com');
     });
+
+    test('partial parse skips fallbacks for omitted props', () => {
+      const Schema = object({
+        surfaced: boolean().fallback(false),
+        dueAt: string().fallback('')
+      });
+
+      const result = Schema.parse({}, { partial: true });
+      expect(result).toBeUndefined();
+    });
+
+    test('partial parse still coerces present props', () => {
+      const Schema = object({
+        surfaced: boolean().fallback(false),
+        dueAt: string().fallback('')
+      });
+
+      const result = Schema.parse({ surfaced: 'true' }, { partial: true });
+      expect(result).toEqual({ surfaced: true });
+    });
+
+    test('partial parse skips required errors for omitted props', () => {
+      const Schema = object({
+        text: string().required(),
+        note: string()
+      });
+
+      const result = Schema.parse({ note: 'hello' }, { partial: true });
+      expect(result).toEqual({ note: 'hello' });
+    });
+
+    test('partial safeParse uses same coercion semantics as parse', () => {
+      const Schema = object({
+        surfaced: boolean().fallback(false),
+        text: string().required()
+      });
+
+      const parsed = Schema.parse({ surfaced: 'true' }, { partial: true });
+      const safeParsed = Schema.safeParse({ surfaced: 'true' }, { partial: true });
+
+      expect(safeParsed).toEqual({
+        data: parsed,
+        errors: null
+      });
+    });
   });
 
   describe('complex schemas', () => {

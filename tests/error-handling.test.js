@@ -71,4 +71,36 @@ describe('error handling', () => {
     // At least one error should be present for the invalid item
     expect(result.errors.tags.some(err => err && err.name === 'is required')).toBe(true);
   });
+
+  test('safeParse can skip validation', () => {
+    const Schema = object({
+      name: string().required()
+    });
+
+    const result = Schema.safeParse({}, { validate: false });
+
+    expect(result).toEqual({
+      data: undefined,
+      errors: null
+    });
+  });
+
+  test('safeParse can preserve unknown props with strict false', () => {
+    const Schema = object({
+      name: string()
+    });
+
+    const result = Schema.safeParse({
+      name: 'Joe',
+      href: '/layers'
+    }, { strict: false });
+
+    expect(result).toEqual({
+      data: {
+        name: 'Joe',
+        href: '/layers'
+      },
+      errors: null
+    });
+  });
 });
