@@ -66,4 +66,15 @@ describe('arrays', () => {
     const Schema = array(string());
     expect(Schema.parse('single')).toEqual(['single']);
   });
+
+  test('empty string coerces to empty array', () => {
+    const Schema = array(string());
+    expect(Schema.parse('')).toEqual([]);
+  });
+
+  test('empty array items are removed during parsing', () => {
+    const Schema = array(string());
+    expect(Schema.parse([''])).toEqual([]);
+    expect(Schema.parse(['', 'a', '', 'b'])).toEqual(['a', 'b']);
+  });
 });

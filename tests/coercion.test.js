@@ -279,9 +279,10 @@ describe('coercion edge cases', () => {
 
   test('string to boolean coercion', () => {
     const Schema = boolean();
-    // Any non-empty string coerces to true (via Boolean() conversion)
     expect(Schema.parse('true')).toEqual(true);
-    expect(Schema.parse('false')).toEqual(true); // Non-empty string is truthy
+    expect(Schema.parse('false')).toEqual(false);
+    expect(Schema.parse('on')).toEqual(true);
+    expect(Schema.parse('off')).toEqual(false);
 
     // Empty string returns undefined (treated as "not provided" before coercion)
     // This happens in coerceValue() before the boolean coercion function runs

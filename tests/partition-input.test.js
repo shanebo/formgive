@@ -47,6 +47,26 @@ describe('partitionInput', () => {
     expect(unknownInput).toEqual({ c: '3' });
   });
 
+  test('sibling extends keep partition bindings isolated', () => {
+    const Base = object({
+      base: string()
+    }).partitionInput();
+
+    const A = Base.extend({
+      a: string()
+    });
+
+    Base.extend({
+      b: string()
+    });
+
+    const input = { base: 'x', a: '1', extra: 'e' };
+    const { knownInput, unknownInput } = A.composeInputs(input);
+
+    expect(knownInput).toEqual({ base: 'x', a: '1' });
+    expect(unknownInput).toEqual({ extra: 'e' });
+  });
+
   test('merge combines props and rebinding partition', () => {
     const A = object({ x: string() }).partitionInput();
     const B = object({ y: string() }).partitionInput();
