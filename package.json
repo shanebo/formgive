@@ -5,15 +5,13 @@
   "repository": "git://github.com/shanebo/formgive.git",
   "main": "./lib/index",
   "dependencies": {
-    "kind-of": "^6.0.3"
+    "kind-of": "^6.0.3",
+    "utili": "link:utili"
   },
   "description": "Form structures",
   "engine": ">= 0.4.1",
   "keywords": [
     "form structures"
   ],
-  "license": "MIT",
-  "scripts": {
-    "test": "mocha --watch"
-  }
+  "license": "MIT"
 }
