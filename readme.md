@@ -36,14 +36,26 @@ Rule.fields(input);      // schema().props shorthand
 string()
 number()
 boolean()
-integer()          // number().integer()
-float(min, max)    // number with decimal constraints
+integer()                  // number().integer()
+float(minDec, maxDec)      // number with decimal constraints
 date()
 array(itemSchema)
 object(props)
-mixed([types])     // accepts multiple types
-callable()         // function type
-gone()             // explicitly absent — used in conditionals
+mixed(['string', 'number']) // accepts multiple types
+callable()                 // function type
+gone()                     // explicitly absent — used in conditionals
+```
+
+### `define(name, fn)`
+
+Register a custom type factory on the formgive namespace:
+
+```js
+import formgive, { define } from 'formgive';
+
+define('email', () => string().pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/));
+
+formgive.email().required() // usable like any built-in
 ```
 
 ---
@@ -220,23 +232,52 @@ Shorthand for `schema(input).props`.
 
 ### `toSentence(input, opts?)`
 
-Renders a plain-English sentence from the schema's values. Fields must call `.sentence()` to participate.
+Renders a plain-English sentence from the schema's values. Only fields that call `.sentence()` participate. The schema is walked in declaration order.
+
+```js
+const Schema = object({
+  size: string().options(['sm', 'md', 'lg']).sentence({ prefix: 'size:' }),
+  active: boolean().sentence()
+});
+
+Schema.toSentence({ size: 'md', active: true }); // "size: md active"
+```
+
+`.sentence(opts)` supports:
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `when` | `fn(value, field, ctx)` | Custom include predicate. Defaults to: present for primitives, `true` for booleans. |
+| `format` | `fn(raw, field, ctx)` | Transform the raw value before rendering. |
+| `value` | `fn(raw, field, ctx)` | Fully control the text representation. |
+| `transform` | `fn(text, raw, field, ctx)` | Transform the final text string. |
+| `phrase` | `fn(text, raw, field, ctx)` | Fully control the output chunk, overrides prefix/suffix. |
+| `prefix` | `string \| fn` | Prepended to the value. |
+| `suffix` | `string \| fn` | Appended to the value. |
+
+Default rendering: booleans render as their label, options fields render the selected option's label, numbers with a `$` prefix are formatted as USD currency.
 
 ---
 
 ## Composition
 
+All extension methods return a new schema — the original is unchanged. They can be chained:
+
 ```js
-// Combine two object schemas
-const Extended = BaseSchema.merge(ExtraSchema);
+const Schema = object({ id: string(), name: string(), email: string(), password: string() })
+  .extend({ age: number().min(18) })
+  .omit(['password'])
+  .extend({ phone: string() });
+```
 
-// Create a variant with extra fields
-const AdminVariant = UserSchema.extend({
-  adminCode: string().required()
-});
+A common pattern is deriving form variants from a shared base:
 
-// Reuse a subset of fields
-const Slim = FullSchema.pick(['name', 'email']);
+```js
+const Base = object({ title: string().required(), description: string() });
+
+const CreateForm = Base.extend({ category: string().required() });
+const EditForm   = Base.extend({ id: string().required(), status: string() });
+const ViewForm   = EditForm.omit(['status']);
 ```
 
 ---
@@ -265,9 +306,32 @@ Schema.modifiers(input); // returns joined modifier string
 
 ---
 
+## `compose(name, keys)`
+
+Defines a named slice of a parsed object's data. `keys` is an array of field names to include. Use `{ originalKey: 'renamedKey' }` entries to rename. Or pass a function that receives the full input and returns anything.
+
+```js
+const Schema = object({
+  name: string(),
+  email: string(),
+  role: string()
+})
+  .compose('credentials', ['email', 'role'])
+  .compose('display', ['name', { email: 'address' }])
+  .compose('summary', (input) => `${input.name} <${input.email}>`);
+
+const result = Schema.data(input);
+const { credentials, display, summary } = Schema.composeInputs(result);
+// credentials → { email, role }
+// display     → { name, address }
+// summary     → "Jane <jane@example.com>"
+```
+
+---
+
 ## `partitionInput()`
 
-Splits an object schema's input into `knownInput` (declared props) and `unknownInput` (undeclared props):
+Shorthand for splitting an object's input into declared and undeclared props. Equivalent to calling `compose` twice with `knownInput` / `unknownInput`:
 
 ```js
 const Schema = object({ name: string() }).partitionInput();
