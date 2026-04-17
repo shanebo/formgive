@@ -78,7 +78,7 @@ describe('conditionals', () => {
       detail: 'tiny'
     });
     expect(Interface.safeParse({ type: 'chip', mode: 'full', detail: 'ok' }).errors).toEqual({
-      detail: 'should be length of at least undefined'
+      detail: 'should be length of at least 3'
     });
     expect(Interface.safeParse({ type: 'card', mode: 'advanced', detail: '9' }).errors).toEqual({
       detail: 'should be 10 or more'
