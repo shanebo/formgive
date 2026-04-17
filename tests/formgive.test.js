@@ -137,7 +137,7 @@ describe('formgive', () => {
             },
             propType: "object",
             input: "fieldset",
-            legend: "Conditions.index",
+            legend: "Conditions index",
           },
           items: [
             {
