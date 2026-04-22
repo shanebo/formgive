@@ -13,14 +13,14 @@ describe('arrays', () => {
     const schema = Schema.schema(input);
     expect(schema).toMatchObject({
       propType: 'array',
-      type: 'array',
+      schemaType: 'array',
       value: input
     });
     expect(schema.items).toHaveLength(3);
     // Array items are schema objects, not value objects
     expect(schema.items[0]).toMatchObject({
       propType: 'string',
-      type: 'string'
+      schemaType: 'string'
     });
     expect(schema.items[1].propType).toEqual('string');
     expect(schema.items[2].propType).toEqual('string');

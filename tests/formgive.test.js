@@ -73,17 +73,17 @@ describe('formgive', () => {
     }).field();
 
     expect(Rule.schema(ruleInput)).toMatchObject({
-      type: 'object',
+      schemaType: 'object',
       props: {
         conditions: {
           propType: 'array',
           key: 'conditions',
           name: 'conditions',
           label: 'Conditions',
-          type: 'array',
+          schemaType: 'array',
           props: undefined,
           template: {
-            type: "object",
+            schemaType: "object",
             props: {
               active: {
                 propType: "boolean",
@@ -141,7 +141,7 @@ describe('formgive', () => {
           },
           items: [
             {
-              type: "object",
+              schemaType: "object",
               props: {
                 active: {
                   propType: "boolean",
@@ -197,7 +197,7 @@ describe('formgive', () => {
               input: "fieldset",
               legend: null,
             }, {
-              type: "object",
+              schemaType: "object",
               props: {
                 active: {
                   propType: "boolean",

@@ -8,7 +8,7 @@ describe('schema parsing', () => {
       const StringSchema = string();
       const schema = StringSchema.schema('hello');
 
-      expect(schema.type).toBe('string');
+      expect(schema.schemaType).toBe('string');
       expect(schema.name).toBeUndefined();
     });
 
@@ -17,7 +17,7 @@ describe('schema parsing', () => {
       const schema = StringSchema.schema('hello', 'myField');
 
       // parentKey is used for nested objects, not for setting name on primitives
-      expect(schema.type).toBe('string');
+      expect(schema.schemaType).toBe('string');
       expect(schema.name).toBeUndefined();
     });
 
@@ -25,7 +25,7 @@ describe('schema parsing', () => {
       const NumberSchema = number();
       const schema = NumberSchema.schema(42);
 
-      expect(schema.type).toBe('number');
+      expect(schema.schemaType).toBe('number');
       expect(schema.name).toBeUndefined();
     });
 
@@ -33,7 +33,7 @@ describe('schema parsing', () => {
       const BoolSchema = boolean();
       const schema = BoolSchema.schema(true);
 
-      expect(schema.type).toBe('boolean');
+      expect(schema.schemaType).toBe('boolean');
       expect(schema.name).toBeUndefined();
     });
 
@@ -46,7 +46,7 @@ describe('schema parsing', () => {
       const schema = StatusSchema.schema(undefined);
 
       expect(schema).toMatchObject({
-        type: 'string',
+        schemaType: 'string',
         required: true,
         fallback: 'draft',
         options: [
@@ -70,7 +70,7 @@ describe('schema parsing', () => {
       const schema = PriceSchema.schema(99.99);
 
       expect(schema).toMatchObject({
-        type: 'number',
+        schemaType: 'number',
         required: true,
         fallback: 0,
         min: 0,
@@ -400,7 +400,7 @@ describe('schema parsing', () => {
 
       expect(schema.props.tags).toMatchObject({
         propType: 'array',
-        type: 'array',
+        schemaType: 'array',
         value: ['tag1', 'tag2']
       });
       expect(schema.props.tags.items).toBeDefined();
@@ -997,7 +997,7 @@ describe('schema parsing', () => {
 
         expect(schema.props.tags).toMatchObject({
           propType: 'array',
-          type: 'array',
+          schemaType: 'array',
           key: 'tags',
           label: 'Tags',
           items: []
@@ -1017,7 +1017,7 @@ describe('schema parsing', () => {
 
         expect(schema.props.comments).toMatchObject({
           propType: 'array',
-          type: 'array',
+          schemaType: 'array',
           key: 'comments',
           label: 'Comments',
           items: []
