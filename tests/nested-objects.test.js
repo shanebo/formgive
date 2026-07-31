@@ -26,7 +26,7 @@ describe('nested objects', () => {
     const schema = Schema.schema(input);
     expect(schema.props.address).toMatchObject({
       propType: 'object',
-      input: 'fieldset',
+      component: 'Fieldset',
       props: {
         street: expect.objectContaining({
           propType: 'string',
@@ -73,7 +73,7 @@ describe('nested objects', () => {
       key: 'tres',
       name: 'dos.tres', // nested props use relative path
       value: 'nachooooooooooo',
-      input: 'input',
+      component: 'Input',
       type: 'text'
     });
   });

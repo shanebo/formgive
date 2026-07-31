@@ -89,17 +89,20 @@ describe('schema parsing', () => {
       expect(schema).toMatchObject({
         name: 'status',
         label: 'Status',
-        input: 'select',
+        component: 'Select',
         value: 'published'
       });
       expect(schema.id).toBeDefined();
       expect(schema.options[0]).toMatchObject({
         id: expect.any(String),
         name: 'status',
-        type: 'chip',
         label: 'draft',
         content: 'draft',
         value: 'draft'
+      });
+      expect(schema.itemOptions).toMatchObject({
+        component: 'Choice',
+        type: 'chip'
       });
       expect(schema.options[1]).toMatchObject({
         value: 'published',
@@ -128,7 +131,7 @@ describe('schema parsing', () => {
       expect(schema).toMatchObject({
         name: 'price',
         label: 'Price',
-        input: 'input',
+        component: 'Input',
         type: 'number',
         value: 99.99
       });
@@ -144,7 +147,7 @@ describe('schema parsing', () => {
       expect(schema).toMatchObject({
         name: 'isActive',
         label: 'Is active',
-        input: 'choice',
+        component: 'Choice',
         type: 'switch',
         checked: true,
         value: true
@@ -160,7 +163,7 @@ describe('schema parsing', () => {
       expect(schema).toMatchObject({
         name: 'username',
         label: 'Username',
-        input: 'input',
+        component: 'Input',
         type: 'text',
         value: 'john'
       });
@@ -177,7 +180,7 @@ describe('schema parsing', () => {
       expect(schema.props.name).toMatchObject({
         propType: 'string',
         type: 'text',
-        input: 'input',
+        component: 'Input',
         key: 'name',
         name: 'name',
         label: 'Name',
@@ -229,7 +232,7 @@ describe('schema parsing', () => {
       expect(schema.props.member).toMatchObject({
         propType: 'boolean',
         type: 'switch',
-        input: 'choice',
+        component: 'Choice',
         checked: true,
         value: true
       });
@@ -244,7 +247,7 @@ describe('schema parsing', () => {
       expect(schema.props.amount).toMatchObject({
         propType: 'number',
         type: 'number',
-        input: 'input',
+        component: 'Input',
         value: 123.45
       });
     });
@@ -258,7 +261,7 @@ describe('schema parsing', () => {
       expect(schema.props.shares).toMatchObject({
         propType: 'number',
         type: 'number',
-        input: 'input',
+        component: 'Input',
         integer: true,
         value: 10
       });
@@ -295,7 +298,7 @@ describe('schema parsing', () => {
 
       expect(schema.props.address).toMatchObject({
         propType: 'object',
-        input: 'fieldset',
+        component: 'Fieldset',
         props: {
           street: expect.objectContaining({
             propType: 'string',
@@ -346,7 +349,7 @@ describe('schema parsing', () => {
 
       expect(schema.props.state).toMatchObject({
         propType: 'number',
-        input: 'select',
+        component: 'Select',
         value: 1
       });
       expect(schema.props.state.options).toBeDefined();
@@ -368,7 +371,10 @@ describe('schema parsing', () => {
 
       expect(schema.props.state.options[0]).toMatchObject({
         label: 'Texas',
-        value: 0,
+        value: 0
+      });
+      expect(schema.props.state.itemOptions).toMatchObject({
+        component: 'Choice',
         type: 'chip'
       });
       expect(schema.props.state.options[1]).toMatchObject({
@@ -385,7 +391,7 @@ describe('schema parsing', () => {
       });
       const schema = Schema.schema({ status: 'active' });
 
-      expect(schema.props.status.input).toEqual('select');
+      expect(schema.props.status.component).toEqual('Select');
       expect(schema.props.status.options).toBeDefined();
       expect(schema.props.status.options.some(opt => opt.value === 'active' && opt.selected)).toBe(true);
     });
@@ -452,7 +458,7 @@ describe('schema parsing', () => {
 
       expect(schema.props.theme).toMatchObject({
         propType: 'object',
-        input: 'fieldset',
+        component: 'Fieldset',
         props: {
           color: expect.objectContaining({
             propType: 'string',
@@ -474,7 +480,7 @@ describe('schema parsing', () => {
         }
       });
 
-      expect(schema.props.theme.input).toEqual('fieldset');
+      expect(schema.props.theme.component).toEqual('Fieldset');
       expect(schema.props.theme.props.color).toBeDefined();
     });
   });
@@ -482,11 +488,11 @@ describe('schema parsing', () => {
   describe('field configurations', () => {
     test('handles field with custom input type', () => {
       const Schema = object({
-        color: string().field({ input: 'color' })
+        color: string().field({ type: 'color' })
       });
       const schema = Schema.schema({ color: '#ff0000' });
 
-      expect(schema.props.color.input).toEqual('color');
+      expect(schema.props.color.component).toEqual('Input');
     });
 
     test('handles field with prefix', () => {
@@ -672,9 +678,9 @@ describe('schema parsing', () => {
       });
       const schema = Schema.schema({ type: 'foo', method: 'post' });
 
-      expect(schema.props.type.input).toEqual('select');
+      expect(schema.props.type.component).toEqual('Select');
       expect(schema.props.type.value).toEqual('foo');
-      expect(schema.props.method.input).toEqual('select');
+      expect(schema.props.method.component).toEqual('Select');
       expect(schema.props.method.value).toEqual('post');
     });
   });
@@ -698,7 +704,7 @@ describe('schema parsing', () => {
 
         expect(schema.props.gender).toMatchObject({
           propType: 'boolean',
-          input: 'choice',
+          component: 'Choice',
           type: 'switch',
           key: 'gender',
           label: 'Gender',
@@ -728,7 +734,7 @@ describe('schema parsing', () => {
         expect(schema.props.name).toMatchObject({
           propType: 'string',
           type: 'text',
-          input: 'input',
+          component: 'Input',
           key: 'name',
           name: 'name',
           label: 'Name',
@@ -745,7 +751,7 @@ describe('schema parsing', () => {
         expect(schema.props.email).toMatchObject({
           propType: 'string',
           type: 'text',
-          input: 'input',
+          component: 'Input',
           required: true,
           key: 'email',
           label: 'Email',
@@ -770,7 +776,7 @@ describe('schema parsing', () => {
 
         expect(schema.props.member).toMatchObject({
           propType: 'boolean',
-          input: 'choice',
+          component: 'Choice',
           type: 'switch',
           value: false,
           key: 'member',
@@ -793,7 +799,7 @@ describe('schema parsing', () => {
 
         expect(schema.props.address.props.full).toMatchObject({
           propType: 'string',
-          input: 'input',
+          component: 'Input',
           type: 'text',
           key: 'full',
           name: 'address.full',
@@ -804,7 +810,7 @@ describe('schema parsing', () => {
 
       test('required url', () => {
         const Schema = object({
-          website: string().required().field({ input: 'url' })
+          website: string().required().field({ type: 'url' })
         });
         const schema = Schema.schema({ website: undefined });
 
@@ -843,7 +849,7 @@ describe('schema parsing', () => {
 
       test('handles pick:chip data structure', () => {
         const Schema = object({
-          state: integer().options(mockOptions).field({ itemOptions: { type: 'chip' }})
+          state: integer().options(mockOptions)
         });
         const schema = Schema.schema({ state: 1 });
 
@@ -855,7 +861,10 @@ describe('schema parsing', () => {
           label: 'Minnesota',
           value: 1,
           selected: true,
-          checked: true,
+          checked: true
+        });
+        expect(schema.props.state.itemOptions).toMatchObject({
+          component: 'Choice',
           type: 'chip'
         });
       });
@@ -868,8 +877,7 @@ describe('schema parsing', () => {
 
         expect(schema.props.state.options[0]).toMatchObject({
           label: 'Texas',
-          value: 0,
-          type: 'chip'
+          value: 0
         });
         expect(schema.props.state.options[1]).toMatchObject({
           label: 'Minnesota',
@@ -890,7 +898,7 @@ describe('schema parsing', () => {
         expect(schema.props.name).toMatchObject({
           propType: 'string',
           type: 'text',
-          input: 'input',
+          component: 'Input',
           required: true,
           key: 'name',
           label: 'Name',
@@ -913,7 +921,7 @@ describe('schema parsing', () => {
 
         expect(schema.props.hasDonation).toMatchObject({
           propType: 'boolean',
-          input: 'choice',
+          component: 'Choice',
           type: 'switch',
           value: false,
           key: 'hasDonation',
@@ -925,7 +933,7 @@ describe('schema parsing', () => {
       test('handles fieldset with nested fields', () => {
         const Schema = object({
           theme: object({
-            color: string().field({ input: 'color' })
+            color: string().field({ type: 'color' })
           })
         });
         const schema = Schema.schema({
@@ -936,7 +944,7 @@ describe('schema parsing', () => {
 
         expect(schema.props.theme).toMatchObject({
           propType: 'object',
-          input: 'fieldset',
+          component: 'Fieldset',
           key: 'theme',
           label: 'Theme'
         });
@@ -945,7 +953,8 @@ describe('schema parsing', () => {
           key: 'color',
           name: 'theme.color',
           label: 'Color',
-          input: 'color'
+          component: 'Input',
+          type: 'color'
         });
       });
 
@@ -962,7 +971,7 @@ describe('schema parsing', () => {
 
         expect(schema.props.title).toMatchObject({
           propType: 'number',
-          input: 'select',
+          component: 'Select',
           key: 'title',
           label: 'Title'
         });
@@ -1039,7 +1048,7 @@ describe('schema parsing', () => {
         expect(schema.props.amount).toMatchObject({
           propType: 'number',
           type: 'number',
-          input: 'input',
+          component: 'Input',
           key: 'amount',
           label: 'Amount',
           value: undefined
@@ -1055,7 +1064,7 @@ describe('schema parsing', () => {
         expect(schema.props.shares).toMatchObject({
           propType: 'number',
           type: 'number',
-          input: 'input',
+          component: 'Input',
           integer: true,
           key: 'shares',
           label: 'Shares',

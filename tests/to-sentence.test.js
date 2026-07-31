@@ -230,7 +230,7 @@ describe('toSentence', () => {
     ];
 
     const Interface = object({
-      unabridged: boolean().field({ input: 'switch' }).sentence(),
+      unabridged: boolean().sentence(),
       type: string()
         .options([
           { label: 'Book', value: 'BOOK' },
@@ -242,11 +242,9 @@ describe('toSentence', () => {
         }),
       figureId: string()
         .options(figureOptions)
-        .field({ input: 'select' })
         .sentence({ prefix: 'by' }),
       topic: string()
         .options(topics)
-        .field({ input: 'select' })
         .sentence({
           prefix: 'on',
           transform: (text) => text.toLowerCase()

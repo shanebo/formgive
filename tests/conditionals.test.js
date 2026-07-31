@@ -6,15 +6,15 @@ describe('conditionals', () => {
     const Interface = object({
       role: string().fallback('member'),
       parentId: when(({ value }) => value === 'list')
-        .then(string().field({ input: 'hidden' }).fallback('list'))
+        .then(string().field({ type: 'hidden' }).fallback('list'))
         .else(string().options(['list', 'abc']).fallback('list'))
     });
 
     const hiddenFields = Interface.fields({ parentId: 'list' });
     const selectFields = Interface.fields({ parentId: 'abc' });
 
-    expect(hiddenFields.parentId.input).toBe('hidden');
-    expect(selectFields.parentId.input).toBe('select');
+    expect(hiddenFields.parentId.component).toBe('Input');
+    expect(selectFields.parentId.component).toBe('Select');
   });
 
   test('gone() omits the prop from schema data and validation', () => {
@@ -61,7 +61,7 @@ describe('conditionals', () => {
       detail: when(({ input }) => input.type === 'chip')
         .then(
           when(({ input }) => input.mode === 'compact')
-            .then(string().field({ input: 'hidden' }).fallback('tiny'))
+            .then(string().field({ type: 'hidden' }).fallback('tiny'))
             .else(string().minLength(3).required())
         )
         .else(
@@ -71,7 +71,7 @@ describe('conditionals', () => {
         )
     });
 
-    expect(Interface.fields({ type: 'chip', mode: 'compact' }).detail.input).toBe('hidden');
+    expect(Interface.fields({ type: 'chip', mode: 'compact' }).detail.component).toBe('Input');
     expect(Interface.parse({ type: 'chip', mode: 'compact' })).toEqual({
       type: 'chip',
       mode: 'compact',

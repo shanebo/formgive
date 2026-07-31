@@ -14,7 +14,7 @@ describe('options and selects', () => {
       expect.objectContaining({ label: 'option2', value: 'option2' }),
       expect.objectContaining({ label: 'option3', value: 'option3' })
     ]);
-    expect(schema.props.status.input).toEqual('select');
+    expect(schema.props.status.component).toEqual('Select');
   });
 
   test('integer with options objects', () => {
@@ -36,7 +36,7 @@ describe('options and selects', () => {
       ])
     );
     expect(schema.props.state.value).toEqual(1);
-    expect(schema.props.state.input).toEqual('select');
+    expect(schema.props.state.component).toEqual('Select');
   });
 
 
@@ -54,14 +54,16 @@ describe('options and selects', () => {
       value: 'ada',
       color: 'violet',
       face: 'solid',
-      type: 'chip',
       selected: true,
       checked: true
     });
     expect(schema.props.assignee.options[1]).toMatchObject({
       label: 'Grace',
       value: 'grace',
-      color: 'teal',
+      color: 'teal'
+    });
+    expect(schema.props.assignee.itemOptions).toMatchObject({
+      component: 'Choice',
       type: 'chip'
     });
     expect(schema.props.assignee.options[1].selected).toBeUndefined();
@@ -78,7 +80,7 @@ describe('options and selects', () => {
 
     const schema = Schema.schema({ state: 'TX' });
     // itemOptions might be stored in config, check if it affects the schema output
-    expect(schema.props.state.input).toEqual('select');
+    expect(schema.props.state.component).toEqual('Select');
     expect(schema.props.state.value).toEqual('TX');
   });
 });

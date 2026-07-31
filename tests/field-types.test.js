@@ -12,7 +12,7 @@ describe('field types', () => {
     expect(schema.props.name).toMatchObject({
       propType: 'string',
       type: 'text',
-      input: 'input',
+      component: 'Input',
       value: 'test value',
       key: 'name',
       name: 'name',
@@ -29,7 +29,7 @@ describe('field types', () => {
     expect(schema.props.age).toMatchObject({
       propType: 'number',
       type: 'number',
-      input: 'input',
+      component: 'Input',
       value: 123,
       key: 'age'
     });
@@ -44,7 +44,7 @@ describe('field types', () => {
     expect(schema.props.count).toMatchObject({
       propType: 'number',
       type: 'number',
-      input: 'input',
+      component: 'Input',
       value: 456,
       key: 'count'
     });
@@ -60,7 +60,7 @@ describe('field types', () => {
     expect(schema.props.active).toMatchObject({
       propType: 'boolean',
       type: 'switch',
-      input: 'choice',
+      component: 'Choice',
       checked: true,
       value: true,
       key: 'active'
@@ -110,7 +110,7 @@ describe('field types', () => {
       expect.objectContaining({ label: 'baz', value: 'baz' })
     ]);
     expect(schema.props.status.value).toEqual('foo');
-    expect(schema.props.status.input).toEqual('select');
+    expect(schema.props.status.component).toEqual('Select');
   });
 
   test('number with min and max', () => {

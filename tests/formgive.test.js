@@ -95,7 +95,7 @@ describe('formgive', () => {
                 props: undefined,
                 modifier: undefined,
                 value: undefined,
-                input: "choice",
+                component: "Choice",
               },
               field: {
                 propType: "string",
@@ -107,7 +107,7 @@ describe('formgive', () => {
                 props: undefined,
                 modifier: undefined,
                 value: undefined,
-                input: "input",
+                component: "Input",
               },
               operator: {
                 propType: "string",
@@ -119,7 +119,7 @@ describe('formgive', () => {
                 props: undefined,
                 modifier: undefined,
                 value: undefined,
-                input: "input",
+                component: "Input",
               },
               value: {
                 propType: "string",
@@ -131,11 +131,11 @@ describe('formgive', () => {
                 props: undefined,
                 modifier: undefined,
                 value: undefined,
-                input: "input",
+                component: "Input",
               },
             },
             propType: "object",
-            input: "fieldset",
+            component: "Fieldset",
             legend: "Conditions index",
           },
           items: [
@@ -152,7 +152,7 @@ describe('formgive', () => {
                   props: undefined,
                   modifier: undefined,
                   value: true,
-                  input: "choice",
+                  component: "Choice",
                   checked: true,
                 },
                 field: {
@@ -165,7 +165,7 @@ describe('formgive', () => {
                   props: undefined,
                   modifier: undefined,
                   value: "type",
-                  input: "input",
+                  component: "Input",
                 },
                 operator: {
                   propType: "string",
@@ -177,7 +177,7 @@ describe('formgive', () => {
                   props: undefined,
                   modifier: undefined,
                   value: "notEquals",
-                  input: "input",
+                  component: "Input",
                 },
                 value: {
                   propType: "string",
@@ -189,11 +189,11 @@ describe('formgive', () => {
                   props: undefined,
                   modifier: undefined,
                   value: "false",
-                  input: "input",
+                  component: "Input",
                 },
               },
               propType: "object",
-              input: "fieldset",
+              component: "Fieldset",
               legend: null,
             }, {
               schemaType: "object",
@@ -208,7 +208,7 @@ describe('formgive', () => {
                   props: undefined,
                   modifier: undefined,
                   value: undefined,
-                  input: "choice",
+                  component: "Choice",
                 },
                 field: {
                   propType: "string",
@@ -220,7 +220,7 @@ describe('formgive', () => {
                   props: undefined,
                   modifier: undefined,
                   value: "type",
-                  input: "input",
+                  component: "Input",
                 },
                 operator: {
                   propType: "string",
@@ -232,7 +232,7 @@ describe('formgive', () => {
                   props: undefined,
                   modifier: undefined,
                   value: "equals",
-                  input: "input",
+                  component: "Input",
                 },
                 value: {
                   propType: "string",
@@ -244,11 +244,11 @@ describe('formgive', () => {
                   props: undefined,
                   modifier: undefined,
                   value: "foo",
-                  input: "input",
+                  component: "Input",
                 },
               },
               propType: "object",
-              input: "fieldset",
+              component: "Fieldset",
               legend: null,
             }
           ],

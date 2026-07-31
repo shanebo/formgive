@@ -53,10 +53,12 @@ Register a custom type factory on the formgive namespace:
 ```js
 import formgive, { define } from 'formgive';
 
-define('email', () => string().pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/));
+define('slug', () => string().pattern(/^[a-z0-9-]+$/));
 
-formgive.email().required() // usable like any built-in
+formgive.slug().required() // usable like any built-in
 ```
+
+Built-in recipes (registered the same way) include common faces such as `email`, `password`, `phone`, `name`, `text`, `textarea`, `url`, `currency`, `dateInput`, `address`, `location`, and Comby helpers (`tags`, `association`, …). They set schema + `.field({ … })` sugar only — they do not invent a parallel prop vocabulary. Import from the default export or use `formgive.email()`, etc.
 
 ---
 
@@ -83,9 +85,13 @@ formgive.email().required() // usable like any built-in
 .transform(fn)           // transform raw value before coercion
 .computed()              // marks field as computed (value may be a function)
 .modifier(fn)            // CSS class modifier function
-.field(opts)             // form field metadata: input, label, placeholder, etc.
+.field(opts)             // form field face: component, type, label, placeholder, …
 .sentence(opts)          // controls toSentence() rendering
 ```
+
+`.options(...)` marks constrained values and, via enrich, defaults the face to `component: 'Select'` with `itemOptions: { component: 'Choice', type: 'chip' }` (override only when you need something else — native `option`, `switch`, `radio`, custom item component, etc.).
+
+Other enrich defaults when unset: boolean → `Choice` + `switch`; number → `Input` + `number`; other primitives → `Input` + `text`; nested objects → `Fieldset`. Schema key becomes the field `name` (and is stamped onto options). Use `.field({ name })` only when the FormData control name should differ from the prop key.
 
 ---
 
@@ -176,7 +182,7 @@ import { when, gone } from 'formgive';
 
 const Schema = object({
   parentId: when(({ parent }) => parent.type === 'list')
-    .then(string().field({ input: 'hidden' }).fallback('list'))
+    .then(string().field({ type: 'hidden' }).fallback('list'))
     .otherwise(string().options(['list', 'abc']))
 });
 ```
@@ -224,7 +230,7 @@ Validate only. Returns an error map or `null`.
 
 ### `schema(input, parentKey?)`
 
-Returns a field metadata tree for form rendering. Each prop includes `key`, `id`, `name`, `label`, `input`, `type`, `value`, and any field-level metadata from `.field()`.
+Returns a field metadata tree for form rendering. Each prop includes `key`, `id`, `name`, `label`, `component`, `type`, `value`, and any field-level metadata from `.field()`.
 
 ### `fields(input?)`
 
