@@ -39,6 +39,36 @@ describe('options and selects', () => {
     expect(schema.props.state.input).toEqual('select');
   });
 
+
+  test('option enrich keeps extra props (passthrough)', () => {
+    const Schema = object({
+      assignee: string().options([
+        { label: 'Ada', value: 'ada', color: 'violet', face: 'solid' },
+        { label: 'Grace', value: 'grace', color: 'teal' }
+      ])
+    });
+    const schema = Schema.schema({ assignee: 'ada' });
+
+    expect(schema.props.assignee.options[0]).toMatchObject({
+      label: 'Ada',
+      value: 'ada',
+      color: 'violet',
+      face: 'solid',
+      type: 'chip',
+      selected: true,
+      checked: true
+    });
+    expect(schema.props.assignee.options[1]).toMatchObject({
+      label: 'Grace',
+      value: 'grace',
+      color: 'teal',
+      type: 'chip'
+    });
+    expect(schema.props.assignee.options[1].selected).toBeUndefined();
+    expect(schema.props.assignee.options[1].checked).toBeUndefined();
+  });
+
+
   test('field with itemOptions for select type', () => {
     const Schema = object({
       state: string()

@@ -62,7 +62,7 @@ describe('hydration', () => {
     expect(schema.props.tags.items[1].props.color.value).toEqual('blue');
   });
 
-  test('hydrates checkboxes with checked state', () => {
+  test('hydrates booleans with checked state', () => {
     const Schema = object({
       help: boolean(),
       foo: boolean(),
@@ -79,7 +79,7 @@ describe('hydration', () => {
     });
 
     expect(schema.props.help.checked).toEqual(true);
-    expect(schema.props.foo.checked).toEqual(false);
+    expect(schema.props.foo.checked).toBeUndefined();
     expect(schema.props.boo.checked).toEqual(true);
     expect(schema.props.gifts.checked).toEqual(true);
   });

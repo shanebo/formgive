@@ -702,9 +702,9 @@ describe('schema parsing', () => {
           type: 'switch',
           key: 'gender',
           label: 'Gender',
-          checked: false,
           value: false
         });
+        expect(schema.props.gender.checked).toBeUndefined();
       });
 
       test('sets id field', () => {
@@ -772,11 +772,11 @@ describe('schema parsing', () => {
           propType: 'boolean',
           input: 'choice',
           type: 'switch',
-          checked: false,
           value: false,
           key: 'member',
           label: 'Member'
         });
+        expect(schema.props.member.checked).toBeUndefined();
       });
 
       test('handles nested fields', () => {
@@ -915,11 +915,11 @@ describe('schema parsing', () => {
           propType: 'boolean',
           input: 'choice',
           type: 'switch',
-          checked: false,
           value: false,
           key: 'hasDonation',
           label: 'Has donation' // API produces lowercase 'd' in donation
         });
+        expect(schema.props.hasDonation.checked).toBeUndefined();
       });
 
       test('handles fieldset with nested fields', () => {

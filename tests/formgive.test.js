@@ -96,7 +96,6 @@ describe('formgive', () => {
                 modifier: undefined,
                 value: undefined,
                 input: "choice",
-                checked: false,
               },
               field: {
                 propType: "string",
@@ -210,7 +209,6 @@ describe('formgive', () => {
                   modifier: undefined,
                   value: undefined,
                   input: "choice",
-                  checked: false,
                 },
                 field: {
                   propType: "string",
