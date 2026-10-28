@@ -114,6 +114,8 @@ Recipes are the same mechanism. They set a primitive plus `.field({ … })` defa
 .sentence(opts)          // controls toSentence() rendering
 ```
 
+Empty values come out `undefined`: `''`, a missing key, and an object with no props left. `.fallback(value)` replaces any of them, so `object({...}).fallback({})` returns `{}` instead.
+
 `.options(...)` marks constrained values and, via enrich, defaults the face to `component: 'Select'` with `itemOptions: { component: 'Choice', type: 'chip' }` (override only when you need something else — native `option`, `switch`, `radio`, custom item component, etc.).
 
 Other enrich defaults when unset: boolean (and `mixed` that includes boolean) → `Choice` + `switch`; number → `Input` + `number`; other primitives → `Input` + `text`; nested objects → `Fieldset`. Schema key becomes the field `name` (and is stamped onto options). Use `.field({ name })` only when the FormData control name should differ from the prop key.

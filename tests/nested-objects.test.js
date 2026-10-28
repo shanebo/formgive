@@ -78,22 +78,68 @@ describe('nested objects', () => {
     });
   });
 
-  test('object with fallback', () => {
+  test('empty object without fallback returns undefined', () => {
+    const Schema = object({
+      type: string(),
+      method: string()
+    });
+
+    expect(Schema.data({})).toEqual(undefined);
+    expect(Schema.data({ type: '' })).toEqual(undefined);
+    expect(Schema.data(undefined)).toEqual(undefined);
+  });
+
+  test('empty object returns its fallback', () => {
     const Schema = object({
       type: string(),
       method: string()
     }).fallback({});
 
-    // Empty object with no valid keys returns undefined (hasKeys check)
-    const data = Schema.data({});
-    expect(data).toEqual(undefined); // Empty object has no keys, so returns undefined
+    expect(Schema.data({})).toEqual({});
+    expect(Schema.data({ type: '' })).toEqual({});
+    expect(Schema.data(undefined)).toEqual({});
+    expect(Schema.parse({})).toEqual({});
+  });
 
-    // Fallback applies when coercedInput is undefined (for non-object types)
-    // For objects, fallback applies when the object has no keys
-    // But when input is undefined, it goes through props processing which returns undefined
-    // Fallback is checked at the end only if coercedInput is undefined
-    const Schema2 = string().fallback('default');
-    expect(Schema2.data(undefined)).toEqual('default');
+  test('object fallback is ignored once any prop has a value', () => {
+    const Schema = object({
+      type: string(),
+      method: string()
+    }).fallback({ type: 'card' });
+
+    expect(Schema.data({ method: 'tap' })).toEqual({ method: 'tap' });
+    expect(Schema.data({})).toEqual({ type: 'card' });
+  });
+
+  test('strict object with only unknown keys returns its fallback', () => {
+    const Schema = object({
+      type: string()
+    }).fallback({});
+
+    expect(Schema.data({ other: 'x' }, { strict: true })).toEqual({});
+  });
+
+  test('nested object fallback fills an empty child', () => {
+    const Schema = object({
+      name: string(),
+      merge: object({
+        type: string(),
+        method: string()
+      }).fallback({})
+    });
+
+    expect(Schema.data({ name: 'Rule', merge: { type: '' } })).toEqual({
+      name: 'Rule',
+      merge: {}
+    });
+  });
+
+  test('null object stays null over its fallback', () => {
+    const Schema = object({
+      type: string()
+    }).fallback({});
+
+    expect(Schema.data(null)).toEqual(null);
   });
 
   test('nested partial parse skips omitted nested props', () => {
