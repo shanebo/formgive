@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'bun:test';
 import '../lib/utils.js';
-import { number, integer, boolean, date, object, string } from '../lib/index.js';
+import { number, integer, boolean, date, object, string, mixed } from '../lib/index.js';
 
 describe('field types', () => {
   test('string field schema within object', () => {
@@ -65,6 +65,38 @@ describe('field types', () => {
       value: true,
       key: 'active'
     });
+  });
+
+  test('mixed with boolean enriches as Choice switch', () => {
+    const Schema = object({
+      isActive: mixed(['boolean', 'callable'])
+        .transform(val => val === 'on' ? true : val)
+    });
+    const schema = Schema.schema({ isActive: true });
+
+    expect(schema.props.isActive).toMatchObject({
+      propType: ['boolean', 'callable'],
+      type: 'switch',
+      component: 'Choice',
+      checked: true,
+      value: true,
+      key: 'isActive'
+    });
+  });
+
+  test('mixed with boolean leaves callable value unchecked', () => {
+    const Schema = object({
+      isActive: mixed(['boolean', 'callable'])
+    });
+    const fn = () => true;
+    const schema = Schema.schema({ isActive: fn });
+
+    expect(schema.props.isActive).toMatchObject({
+      type: 'switch',
+      component: 'Choice',
+      value: fn
+    });
+    expect(schema.props.isActive.checked).toBeUndefined();
   });
 
   test('date field schema within object', () => {
