@@ -60,4 +60,20 @@ describe('validation', () => {
       }
     });
   });
+
+  test('required rejects empty strings', () => {
+    const Schema = object({
+      name: string().required(),
+      note: string()
+    });
+
+    expect(Schema.safeParse({ name: '', note: '' })).toEqual({
+      data: {
+        name: ''
+      },
+      errors: {
+        name: 'is required'
+      }
+    });
+  });
 });
