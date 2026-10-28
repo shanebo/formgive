@@ -26,6 +26,7 @@ Rule.data(input);        // coerce only, no validation
 Rule.validate(input);    // validate only, returns errors or null
 Rule.schema(input);      // form-ready field metadata tree
 Rule.fields(input);      // schema().props shorthand
+Rule.fields(data, errors); // with errors attached
 ```
 
 ---
@@ -263,9 +264,14 @@ Validate only. Returns an error map or `null`.
 
 Returns a field metadata tree for form rendering. Each prop includes `key`, `id`, `name`, `label`, `component`, `type`, `value`, and any field-level metadata from `.field()`.
 
-### `fields(input?)`
+### `fields(input?, errors?)`
 
-Shorthand for `schema(input).props`.
+Shorthand for `schema(input).props`. With `errors`, each failing field gets its message as `error`, down through nested props and array rows; a failed array rule lands on the array field. Pass `data` from the same `safeParse`, since parsing drops blank array items and errors line up with what's left:
+
+```js
+const { data, errors } = Schema.safeParse(body);
+const fields = Schema.fields(data, errors);
+```
 
 ### `toSentence(input, opts?)`
 
