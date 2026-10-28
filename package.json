@@ -1,6 +1,6 @@
 {
   "name": "formgive",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "author": "Shane Thacker <shane@steadymade.com>",
   "repository": "git://github.com/shanebo/formgive.git",
   "main": "./lib/index",
