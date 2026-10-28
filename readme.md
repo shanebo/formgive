@@ -48,17 +48,42 @@ gone()                     // explicitly absent — used in conditionals
 
 ### `define(name, fn)`
 
-Register a custom type factory on the formgive namespace:
+Register a custom type factory on the default export (recipes are not named exports):
 
 ```js
-import formgive, { define } from 'formgive';
+import f, { define, string } from 'formgive';
 
 define('slug', () => string().pattern(/^[a-z0-9-]+$/));
 
-formgive.slug().required() // usable like any built-in
+f.slug().required() // usable like any built-in
 ```
 
-Built-in recipes (registered the same way) include common faces such as `email`, `password`, `phone`, `name`, `text`, `textarea`, `url`, `currency`, `dateInput`, `address`, `location`, and Comby helpers (`tags`, `association`, …). They set schema + `.field({ … })` sugar only — they do not invent a parallel prop vocabulary. Import from the default export or use `formgive.email()`, etc.
+Recipes are the same mechanism. They set a primitive plus `.field({ … })` defaults — not a second prop vocabulary. `import f from 'formgive'` then `f.email()`, etc.
+
+| Recipe | Primitive | Field defaults |
+|--------|-----------|----------------|
+| `text` | `string()` | autocomplete / autocorrect / spellcheck off |
+| `name` | `string()` | autocomplete `name` |
+| `email` | `string()` | `type: 'email'` |
+| `phone` | `string()` | `type: 'tel'` |
+| `ccnumber` | `string()` | `type: 'tel'`, autocomplete `ccnumber` |
+| `password` | `string()` | `type: 'password'` |
+| `url` | `string()` | `type: 'url'`, `https://.*` pattern |
+| `textarea` | `string()` | `component: 'Textarea'` |
+| `dateInput` | `string()` | `type: 'date'` |
+| `int` | `number().integer()` | `step: '1'`, `min: '1'` |
+| `decimal` | `number()` | `step: '.01'`, `min: '.01'` |
+| `currency` | `number()` | `$` prefix, currency format |
+| `dateRange` | `object({ key, start, end })` | `component: 'Range'`; `key` takes an options list |
+| `currencyRange` | `object({ min, max })` | `component: 'Fieldset'` |
+| `address` | object (street, locality, region, postal, country) | `component: 'Fieldset'`; country options default to the built-in list |
+| `location` | object (locality, region, postal, country) | `component: 'Fieldset'` |
+| `multioption` | `string().options(...)` | `component: 'Comby'`, `type: 'multioption'` |
+| `tags` | `string()` | `component: 'Comby'`, `type: 'tags'` |
+| `association` | `string()` | `component: 'Comby'`, remote, single |
+| `associations` | `string()` | `component: 'Comby'`, remote, multiple |
+
+`date` / `float` stay primitives. Date-input sugar is `dateInput`; float sugar is `decimal`.
 
 ---
 
@@ -91,7 +116,7 @@ Built-in recipes (registered the same way) include common faces such as `email`,
 
 `.options(...)` marks constrained values and, via enrich, defaults the face to `component: 'Select'` with `itemOptions: { component: 'Choice', type: 'chip' }` (override only when you need something else — native `option`, `switch`, `radio`, custom item component, etc.).
 
-Other enrich defaults when unset: boolean → `Choice` + `switch`; number → `Input` + `number`; other primitives → `Input` + `text`; nested objects → `Fieldset`. Schema key becomes the field `name` (and is stamped onto options). Use `.field({ name })` only when the FormData control name should differ from the prop key.
+Other enrich defaults when unset: boolean (and `mixed` that includes boolean) → `Choice` + `switch`; number → `Input` + `number`; other primitives → `Input` + `text`; nested objects → `Fieldset`. Schema key becomes the field `name` (and is stamped onto options). Use `.field({ name })` only when the FormData control name should differ from the prop key.
 
 ---
 
