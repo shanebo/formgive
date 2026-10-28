@@ -117,7 +117,7 @@ Recipes are the same mechanism. They set a primitive plus `.field({ … })` defa
 
 Empty values come out `undefined`: `''`, a missing key, and an object with no props left. `.fallback(value)` replaces any of them, so `object({...}).fallback({})` returns `{}` instead.
 
-`.required()` rejects a missing value and `''`. An empty array passes; use `.minLength(1)` for at least one item.
+`.required()` rejects a missing value and `''`. A missing required object returns `is required` instead of its props' errors. An empty array passes; use `.minLength(1)` for at least one item.
 
 Rules apply to the value they're chained on. On an array, `.minLength`, `.maxLength` and `.length` count items, `.options` checks every item, and `.test` gets the whole array. `.min` and `.max` are for numbers only. Rules for each item go on the item schema: `array(string().minLength(2)).maxLength(5)`.
 

@@ -76,4 +76,35 @@ describe('validation', () => {
       }
     });
   });
+
+  test('required objects reject a missing or empty value', () => {
+    const Schema = object({
+      address: object({
+        street: string().required(),
+        city: string()
+      }).required()
+    });
+
+    expect([
+      Schema.safeParse({}).errors,
+      Schema.safeParse({ address: {} }).errors,
+      Schema.safeParse({ address: { city: 'Austin' } }).errors
+    ]).toEqual([
+      { address: 'is required' },
+      { address: 'is required' },
+      { address: { street: 'is required' } }
+    ]);
+  });
+
+  test('optional objects still report their own required props', () => {
+    const Schema = object({
+      address: object({
+        street: string().required()
+      })
+    });
+
+    expect(Schema.safeParse({}).errors).toEqual({
+      address: { street: 'is required' }
+    });
+  });
 });
