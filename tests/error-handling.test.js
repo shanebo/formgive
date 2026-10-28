@@ -35,7 +35,6 @@ describe('error handling', () => {
       })
     });
 
-    // Empty string is valid for strings, so test with missing field
     const result = Schema.safeParse({
       address: {}
       // street missing
@@ -55,7 +54,6 @@ describe('error handling', () => {
       }))
     });
 
-    // Empty string is valid for strings, so test with missing field
     const result = Schema.safeParse({
       tags: [
         { name: 'theology' },
@@ -63,13 +61,12 @@ describe('error handling', () => {
       ]
     });
 
-    // Array validation returns array of errors (nulls are filtered out)
-    // The array contains only error objects, not preserving original indices
-    expect(result.errors.tags).toBeDefined();
-    expect(Array.isArray(result.errors.tags)).toBe(true);
-    expect(result.errors.tags.length).toBeGreaterThan(0);
-    // At least one error should be present for the invalid item
-    expect(result.errors.tags.some(err => err && err.name === 'is required')).toBe(true);
+    expect(result.errors).toEqual({
+      tags: [
+        null,
+        { name: 'is required' }
+      ]
+    });
   });
 
   test('safeParse can skip validation', () => {

@@ -118,6 +118,8 @@ Empty values come out `undefined`: `''`, a missing key, and an object with no pr
 
 `.required()` rejects a missing value and `''`. An empty array passes; use `.minLength(1)` for at least one item.
 
+Rules apply to the value they're chained on. On an array, `.minLength`, `.maxLength` and `.length` count items, `.options` checks every item, and `.test` gets the whole array. `.min` and `.max` are for numbers only. Rules for each item go on the item schema: `array(string().minLength(2)).maxLength(5)`.
+
 `.options(...)` marks constrained values and, via enrich, defaults the face to `component: 'Select'` with `itemOptions: { component: 'Choice', type: 'chip' }` (override only when you need something else — native `option`, `switch`, `radio`, custom item component, etc.).
 
 Other enrich defaults when unset: boolean (and `mixed` that includes boolean) → `Choice` + `switch`; number → `Input` + `number`; other primitives → `Input` + `text`; nested objects → `Fieldset`. Schema key becomes the field `name` (and is stamped onto options). Use `.field({ name })` only when the FormData control name should differ from the prop key.
@@ -387,8 +389,9 @@ try {
 }
 ```
 
-Array errors are indexed:
+Array errors line up with the input, `null` for rows that pass. A failed array rule returns its message instead:
 
 ```js
 { items: [null, { name: 'is required' }] }
+{ items: 'should be length no more than 5' }
 ```

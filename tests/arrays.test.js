@@ -77,4 +77,41 @@ describe('arrays', () => {
     expect(Schema.parse([''])).toEqual([]);
     expect(Schema.parse(['', 'a', '', 'b'])).toEqual(['a', 'b']);
   });
+
+  test('length rules count items', () => {
+    expect(array(string()).minLength(1).safeParse([]).errors).toEqual('should be length of at least 1');
+    expect(array(string()).maxLength(1).safeParse(['a', 'b']).errors).toEqual('should be length no more than 1');
+    expect(array(string()).length(2).safeParse(['a']).errors).toEqual('should be a length of 2');
+    expect(array(string()).minLength(1).safeParse(['a']).errors).toEqual(null);
+  });
+
+  test('options check every item', () => {
+    const Schema = array(integer()).options([1, 2]);
+
+    expect(Schema.safeParse(['3']).errors).toEqual('should be one of 1, 2 instead of 3');
+    expect(Schema.safeParse(['1', '2']).errors).toEqual(null);
+  });
+
+  test('test gets the whole array', () => {
+    const Schema = array(string()).test(items => new Set(items).size === items.length);
+
+    expect(Schema.safeParse(['a', 'a']).errors).toEqual('does not pass the custom validator');
+    expect(Schema.safeParse(['a', 'b']).errors).toEqual(null);
+  });
+
+  test('array rule errors replace item errors', () => {
+    const Schema = array(object({ name: string().required() })).maxLength(1);
+
+    expect(Schema.safeParse([{}, {}]).errors).toEqual('should be length no more than 1');
+  });
+
+  test('item errors keep their position', () => {
+    const Schema = array(object({ name: string().required() }));
+
+    expect(Schema.safeParse([{ name: 'a' }, {}, { name: 'c' }]).errors).toEqual([
+      null,
+      { name: 'is required' },
+      null
+    ]);
+  });
 });
